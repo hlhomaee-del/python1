@@ -1,0 +1,1728 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Python Functions — Interactive Lesson | Hillary Homai</title>
+<style>
+:root{
+  --bg:#0d1117;--surf:#161b22;--surf2:#21262d;--surf3:#30363d;
+  --bdr:#30363d;--text:#e6edf3;--muted:#8b949e;
+  --blue:#58a6ff;--blue-d:#1f6feb;--blue-bg:#0d2644;
+  --green:#3fb950;--green-d:#238636;--green-bg:#0d2f1a;
+  --yellow:#e3b341;--yellow-bg:#2b1f08;
+  --orange:#f0883e;--orange-bg:#2b1500;
+  --red:#f85149;--red-bg:#3d0e0a;
+  --violet:#bc8cff;--violet-bg:#1d1033;
+  --teal:#39d0d8;--teal-bg:#0b2a2b;
+  --py-kw:#ff79c6;--py-fn:#50fa7b;--py-str:#f1fa8c;
+  --py-num:#bd93f9;--py-cm:#6272a4;--py-punc:#f8f8f2;
+  --r:8px;--r2:14px;--r3:20px;
+  --shadow:0 4px 24px rgba(0,0,0,.4);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;font-size:16px}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);line-height:1.65;overflow-x:hidden;min-height:100vh}
+::-webkit-scrollbar{width:6px}::-webkit-scrollbar-track{background:var(--surf)}::-webkit-scrollbar-thumb{background:var(--surf3);border-radius:3px}
+
+/* TOP BAR */
+.top-bar{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(13,17,23,.95);backdrop-filter:blur(10px);border-bottom:1px solid var(--bdr);padding:0 20px}
+.top-bar-inner{max-width:1100px;margin:0 auto;display:flex;align-items:center;gap:16px;height:54px;flex-wrap:wrap}
+.site-logo{font-size:13px;font-weight:700;color:var(--py-fn);white-space:nowrap;display:flex;align-items:center;gap:6px}
+.credit{font-size:10.5px;color:var(--muted);white-space:nowrap}
+.progress-wrap{flex:1;min-width:120px}
+.progress-track{height:5px;background:var(--surf3);border-radius:3px;overflow:hidden}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--blue-d),var(--violet));border-radius:3px;transition:width .5s ease;width:0%}
+.score-pill{background:var(--surf2);border:1px solid var(--bdr);border-radius:20px;padding:4px 12px;font-size:11px;font-weight:700;color:var(--yellow);white-space:nowrap}
+.nav-dots{display:flex;gap:5px;flex-wrap:wrap}
+.nav-dot{width:8px;height:8px;border-radius:50%;border:1.5px solid var(--surf3);cursor:pointer;transition:all .2s;background:transparent}
+.nav-dot.done{background:var(--green);border-color:var(--green)}
+.nav-dot.active{background:var(--blue);border-color:var(--blue);transform:scale(1.3)}
+.nav-dot:hover{border-color:var(--blue-d)}
+
+/* SECTIONS */
+.lesson{padding-top:70px}
+.sec{display:none;padding:30px 20px 60px;max-width:1000px;margin:0 auto;animation:fadeUp .4s ease}
+.sec.active{display:block}
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+.sec-header{margin-bottom:28px;text-align:center}
+.sec-num{display:inline-block;background:linear-gradient(135deg,var(--blue-d),var(--violet));border-radius:50%;width:36px;height:36px;font-size:13px;font-weight:800;line-height:36px;margin-bottom:8px}
+.sec-title{font-size:clamp(20px,4vw,30px);font-weight:800;background:linear-gradient(135deg,var(--text),var(--blue));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:6px}
+.sec-sub{font-size:13.5px;color:var(--muted);max-width:600px;margin:0 auto}
+
+/* HERO */
+.hero{min-height:calc(100vh - 54px);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:40px 20px;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 30% 40%,rgba(31,111,235,.12) 0%,transparent 60%),radial-gradient(ellipse at 70% 60%,rgba(188,140,255,.08) 0%,transparent 55%)}
+.hero-badge{display:inline-block;background:var(--blue-bg);border:1px solid var(--blue-d);border-radius:20px;padding:5px 14px;font-size:12px;color:var(--blue);font-weight:600;margin-bottom:20px;letter-spacing:.3px}
+.hero-title{font-size:clamp(32px,6vw,64px);font-weight:900;line-height:1.15;margin-bottom:16px;background:linear-gradient(135deg,#fff 0%,var(--blue) 50%,var(--violet) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero-sub{font-size:clamp(14px,2.5vw,18px);color:var(--muted);max-width:550px;margin:0 auto 32px}
+.hero-credit{font-size:12px;color:var(--muted);margin-bottom:28px;font-style:italic}
+.btn-start{background:linear-gradient(135deg,var(--blue-d),var(--violet));color:#fff;border:none;border-radius:var(--r2);padding:14px 38px;font-size:16px;font-weight:700;cursor:pointer;transition:all .2s;box-shadow:0 4px 20px rgba(31,111,235,.4)}
+.btn-start:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(31,111,235,.5)}
+.hero-stats{display:flex;gap:24px;margin-top:32px;flex-wrap:wrap;justify-content:center}
+.hero-stat{background:var(--surf);border:1px solid var(--bdr);border-radius:var(--r2);padding:12px 20px;text-align:center}
+.hero-stat-n{font-size:24px;font-weight:800;color:var(--blue)}
+.hero-stat-l{font-size:11px;color:var(--muted)}
+
+/* CARDS */
+.card{background:var(--surf);border:1px solid var(--bdr);border-radius:var(--r2);padding:20px;margin-bottom:14px;box-shadow:var(--shadow)}
+.card-title{font-size:14px;font-weight:700;margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.cg{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:640px){.g2{grid-template-columns:1fr}}
+
+/* CODE BLOCKS */
+.code-block{background:#0a0e14;border:1px solid var(--bdr);border-radius:var(--r);padding:16px 18px;font-family:'Cascadia Code','Fira Code','Consolas',monospace;font-size:13.5px;line-height:2;position:relative;overflow:hidden;margin:10px 0}
+.code-block::before{content:'Python';position:absolute;top:8px;right:12px;font-size:10px;color:var(--py-cm);letter-spacing:.5px}
+.kw{color:var(--py-kw)}
+.fn{color:var(--py-fn)}
+.st{color:var(--py-str)}
+.nm{color:var(--py-num)}
+.bi{color:var(--blue)}
+.pu{color:var(--py-punc)}
+.cm{color:var(--py-cm)}
+.in{display:inline-block;padding-left:28px}
+.hl-kw{background:rgba(255,121,198,.15);border-radius:3px;padding:2px 4px;cursor:pointer;border:1px dashed rgba(255,121,198,.4);transition:all .2s}
+.hl-fn{background:rgba(80,250,123,.15);border-radius:3px;padding:2px 4px;cursor:pointer;border:1px dashed rgba(80,250,123,.4);transition:all .2s}
+.hl-paren{background:rgba(57,208,216,.15);border-radius:3px;padding:2px 4px;cursor:pointer;border:1px dashed rgba(57,208,216,.4);transition:all .2s}
+.hl-colon{background:rgba(227,179,65,.15);border-radius:3px;padding:2px 4px;cursor:pointer;border:1px dashed rgba(227,179,65,.4);transition:all .2s}
+.hl-indent{background:rgba(188,140,255,.15);border-radius:3px;padding:2px 4px;cursor:pointer;border:1px dashed rgba(188,140,255,.4);transition:all .2s}
+.hl-print{background:rgba(88,166,255,.15);border-radius:3px;padding:2px 4px;cursor:pointer;border:1px dashed rgba(88,166,255,.4);transition:all .2s}
+.hl-str{background:rgba(241,250,140,.15);border-radius:3px;padding:2px 4px;cursor:pointer;border:1px dashed rgba(241,250,140,.4);transition:all .2s}
+.hl-kw:hover,.hl-fn:hover,.hl-paren:hover,.hl-colon:hover,.hl-indent:hover,.hl-print:hover,.hl-str:hover{transform:scale(1.05)}
+
+/* ANATOMY TOOLTIP */
+.anatomy-tooltip{background:var(--surf2);border:1px solid var(--bdr);border-radius:var(--r2);padding:16px;margin-top:14px;display:none;animation:fadeUp .25s ease}
+.anatomy-tooltip.visible{display:block}
+.tip-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);margin-bottom:6px}
+.tip-title{font-size:16px;font-weight:800;margin-bottom:8px}
+.tip-body{font-size:13px;color:var(--muted);line-height:1.7;margin-bottom:10px}
+.tip-confusion{background:var(--yellow-bg);border:1px solid rgba(227,179,65,.3);border-radius:var(--r);padding:10px 12px;margin-top:8px;font-size:12.5px;display:none}
+.tip-confusion.open{display:block;animation:fadeUp .2s ease}
+.tip-confusion-lbl{color:var(--yellow);font-weight:700;font-size:11px;margin-bottom:4px}
+.btn{padding:8px 18px;border-radius:var(--r);border:none;font-size:12.5px;font-weight:600;cursor:pointer;transition:all .18s}
+.btn-bl{background:var(--blue-bg);color:var(--blue);border:1px solid var(--blue-d)}
+.btn-bl:hover{background:var(--blue-d);color:#fff}
+.btn-gr{background:var(--green-bg);color:var(--green);border:1px solid var(--green-d)}
+.btn-gr:hover{background:var(--green-d);color:#fff}
+.btn-ye{background:var(--yellow-bg);color:var(--yellow);border:1px solid rgba(227,179,65,.5)}
+.btn-re{background:var(--red-bg);color:var(--red);border:1px solid rgba(248,81,73,.5)}
+.btn-vi{background:var(--violet-bg);color:var(--violet);border:1px solid rgba(188,140,255,.5)}
+.btn-nav{background:linear-gradient(135deg,var(--blue-d),var(--violet));color:#fff;border:none;border-radius:var(--r2);padding:10px 24px;font-size:13px;font-weight:700;cursor:pointer;transition:all .2s;box-shadow:0 3px 14px rgba(31,111,235,.35)}
+.btn-nav:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(31,111,235,.5)}
+.btn-sm{padding:5px 12px;font-size:11.5px}
+.btn-ghost{background:transparent;color:var(--muted);border:1px solid var(--bdr)}
+.btn-ghost:hover{color:var(--text);border-color:var(--surf3)}
+
+/* QUIZ */
+.qo{display:block;width:100%;text-align:left;padding:11px 14px;background:var(--surf2);border:1.5px solid var(--bdr);border-radius:var(--r);color:var(--text);font-size:12.5px;cursor:pointer;margin-bottom:7px;transition:all .18s;line-height:1.55}
+.qo:hover:not([disabled]){background:var(--surf3);border-color:var(--blue-d)}
+.qo.correct{background:var(--green-bg)!important;border-color:var(--green)!important;color:var(--green)!important;font-weight:600}
+.qo.wrong{background:var(--red-bg)!important;border-color:var(--red)!important;color:var(--red)!important}
+.qo[disabled]{cursor:not-allowed;opacity:.8}
+.feedback{padding:12px 14px;border-radius:var(--r);margin-top:10px;font-size:12.5px;line-height:1.65;display:none}
+.feedback.show{display:block;animation:fadeUp .2s ease}
+.fb-c{background:var(--green-bg);border:1px solid var(--green);color:#a8d5a2}
+.fb-w{background:var(--red-bg);border:1px solid var(--red);color:#f8a09a}
+.fb-info{background:var(--blue-bg);border:1px solid var(--blue-d);color:var(--blue)}
+
+/* TAGS */
+.badge{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700;letter-spacing:.3px}
+.b-bl{background:var(--blue-bg);color:var(--blue);border:1px solid rgba(88,166,255,.3)}
+.b-gr{background:var(--green-bg);color:var(--green);border:1px solid rgba(63,185,80,.3)}
+.b-ye{background:var(--yellow-bg);color:var(--yellow);border:1px solid rgba(227,179,65,.3)}
+.b-re{background:var(--red-bg);color:var(--red);border:1px solid rgba(248,81,73,.3)}
+.b-vi{background:var(--violet-bg);color:var(--violet);border:1px solid rgba(188,140,255,.3)}
+.b-or{background:var(--orange-bg);color:var(--orange);border:1px solid rgba(240,136,62,.3)}
+
+/* DEFINE VS CALL */
+.dvc-line{background:var(--surf2);border:1px solid var(--bdr);border-radius:var(--r);padding:12px 16px;margin-bottom:8px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.dvc-code{font-family:'Cascadia Code','Fira Code','Consolas',monospace;font-size:13px;flex:1;color:var(--text)}
+.dvc-btns{display:flex;gap:6px}
+.dvc-btn{padding:5px 11px;border-radius:var(--r);border:1.5px solid var(--bdr);background:var(--surf3);color:var(--muted);font-size:11.5px;font-weight:600;cursor:pointer;transition:all .18s}
+.dvc-btn:hover:not([disabled]){background:var(--surf2);border-color:var(--blue-d);color:var(--text)}
+.dvc-btn.sel-correct{background:var(--green-bg)!important;border-color:var(--green)!important;color:var(--green)!important}
+.dvc-btn.sel-wrong{background:var(--red-bg)!important;border-color:var(--red)!important;color:var(--red)!important}
+.dvc-btn[disabled]{cursor:not-allowed}
+
+/* EXECUTION TIMELINE */
+.timeline{position:relative;margin:20px 0}
+.tl-step{display:flex;align-items:flex-start;gap:14px;padding:12px 16px;border-radius:var(--r);border:1px solid var(--bdr);background:var(--surf2);margin-bottom:8px;transition:all .4s;opacity:.4}
+.tl-step.active{opacity:1;border-color:var(--blue-d);background:rgba(31,111,235,.07)}
+.tl-step.done{opacity:.75;border-color:var(--green-d);background:rgba(63,185,80,.05)}
+.tl-num{width:28px;height:28px;border-radius:50%;background:var(--surf3);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;transition:all .3s}
+.tl-step.active .tl-num{background:var(--blue-d);color:#fff}
+.tl-step.done .tl-num{background:var(--green-d);color:#fff}
+.tl-body{flex:1}
+.tl-label{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px}
+.tl-desc{font-size:13px;line-height:1.6}
+.tl-code{font-family:'Cascadia Code','Fira Code','Consolas',monospace;font-size:12px;color:var(--py-fn);margin-top:4px}
+
+/* COMPARISON TABLE */
+.cmp-table{width:100%;border-collapse:collapse;font-size:13px}
+.cmp-table th{padding:10px 14px;background:var(--surf2);font-weight:700;font-size:11px;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);text-align:left;border-bottom:1px solid var(--bdr)}
+.cmp-table td{padding:10px 14px;border-bottom:1px solid rgba(48,54,61,.5);vertical-align:top;line-height:1.6}
+.cmp-table tr:last-child td{border-bottom:none}
+.cmp-table tr:hover td{background:rgba(255,255,255,.02)}
+
+/* DRAG DROP */
+.drag-pool{display:flex;flex-wrap:wrap;gap:8px;padding:14px;background:var(--surf2);border:1px dashed var(--bdr);border-radius:var(--r2);min-height:52px;margin-bottom:10px}
+.drag-target{padding:14px;background:var(--surf2);border:2px dashed var(--bdr);border-radius:var(--r);min-height:52px;display:flex;flex-wrap:wrap;gap:6px;align-items:flex-start;margin-bottom:6px;transition:border-color .2s}
+.drag-target.over{border-color:var(--blue-d);background:rgba(31,111,235,.05)}
+.drag-target.correct-zone{border-color:var(--green);background:rgba(63,185,80,.05)}
+.drag-target.wrong-zone{border-color:var(--red);background:rgba(248,81,73,.05)}
+.drag-item{padding:5px 12px;background:var(--surf3);border:1px solid var(--bdr);border-radius:20px;font-size:12px;font-weight:600;cursor:grab;user-select:none;transition:all .18s}
+.drag-item:hover{background:var(--blue-bg);border-color:var(--blue-d);color:var(--blue)}
+.drag-item.dragging{opacity:.4;transform:scale(.95)}
+.drag-item.placed-correct{background:var(--green-bg);border-color:var(--green);color:var(--green);cursor:default}
+.drag-item.placed-wrong{background:var(--red-bg);border-color:var(--red);color:var(--red)}
+
+/* PARAMS VISUAL */
+.param-diagram{display:flex;align-items:center;gap:0;font-family:'Cascadia Code','Fira Code','Consolas',monospace;font-size:14px;flex-wrap:wrap;justify-content:center;margin:14px 0}
+.param-slot{padding:6px 12px;border-radius:var(--r);border:2px solid;margin:2px;text-align:center;transition:all .3s}
+.ps-fn{border-color:var(--py-fn);color:var(--py-fn);background:rgba(80,250,123,.07)}
+.ps-kw{border-color:var(--py-kw);color:var(--py-kw);background:rgba(255,121,198,.07)}
+.ps-pa{border-color:var(--teal);color:var(--teal);background:rgba(57,208,216,.07)}
+.ps-pu{border-color:var(--surf3);color:var(--py-punc);background:transparent}
+.ps-st{border-color:var(--py-str);color:var(--py-str);background:rgba(241,250,140,.07)}
+.ps-num{border-color:var(--py-num);color:var(--py-num);background:rgba(189,147,249,.07)}
+
+/* MISCONCEPTION CARDS */
+.misc-card{background:var(--surf2);border:1px solid var(--bdr);border-radius:var(--r2);overflow:hidden;margin-bottom:8px}
+.misc-q{padding:14px 16px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:10px;font-size:13px;font-weight:600;transition:background .2s}
+.misc-q:hover{background:var(--surf3)}
+.misc-q .arr{font-size:10px;color:var(--muted);transition:transform .25s;flex-shrink:0}
+.misc-q.open .arr{transform:rotate(90deg);color:var(--blue)}
+.misc-q.open{background:rgba(31,111,235,.06);color:var(--blue)}
+.misc-a{display:none;padding:0 16px 14px;font-size:12.5px;color:var(--muted);line-height:1.75;border-top:1px solid var(--bdr)}
+.misc-a.visible{display:block;animation:fadeUp .2s ease}
+.misc-a .code-inline{font-family:'Cascadia Code','Fira Code','Consolas',monospace;background:var(--surf3);padding:1px 6px;border-radius:4px;font-size:12px;color:var(--py-fn)}
+
+/* ORDERING */
+.order-list{list-style:none}
+.order-item{display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--surf2);border:1px solid var(--bdr);border-radius:var(--r);margin-bottom:6px;cursor:grab;user-select:none;transition:all .2s;font-size:12.5px}
+.order-item:active{cursor:grabbing}
+.order-item.order-correct{border-color:var(--green);background:rgba(63,185,80,.07)}
+.order-item.order-wrong{border-color:var(--red);background:rgba(248,81,73,.07)}
+.order-handle{color:var(--muted);font-size:14px;flex-shrink:0}
+.order-label{flex:1;font-family:'Cascadia Code','Fira Code','Consolas',monospace;font-size:12px}
+
+/* SORT ACTIVITY */
+.sort-bins{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin:12px 0}
+@media(max-width:500px){.sort-bins{grid-template-columns:1fr}}
+.sort-bin{background:var(--surf2);border:2px dashed var(--bdr);border-radius:var(--r2);padding:12px;min-height:80px}
+.sort-bin-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin-bottom:8px}
+.sort-items{display:flex;flex-wrap:wrap;gap:5px}
+.sort-card{padding:5px 10px;background:var(--surf3);border:1px solid var(--bdr);border-radius:20px;font-size:12px;cursor:pointer;transition:all .18s;user-select:none}
+.sort-card:hover{background:var(--blue-bg);border-color:var(--blue-d);color:var(--blue)}
+.sort-card.sc-correct{background:var(--green-bg);border-color:var(--green);color:var(--green);cursor:default}
+.sort-card.sc-wrong{background:var(--red-bg);border-color:var(--red);color:var(--red)}
+
+/* ERROR DETECTIVE */
+.err-card{background:#0a0e14;border:1px solid var(--bdr);border-radius:var(--r2);overflow:hidden;margin-bottom:16px}
+.err-header{padding:10px 16px;background:var(--surf2);font-size:12px;font-weight:700;color:var(--muted);display:flex;align-items:center;gap:8px}
+.err-code{padding:16px 18px;font-family:'Cascadia Code','Fira Code','Consolas',monospace;font-size:13px;line-height:2}
+.err-line{display:block}
+.err-line.has-error{background:rgba(248,81,73,.08);border-left:3px solid var(--red);padding-left:12px;cursor:pointer;transition:background .2s}
+.err-line.has-error:hover{background:rgba(248,81,73,.15)}
+.err-found{padding:12px 16px;background:rgba(248,81,73,.08);border-top:1px solid rgba(248,81,73,.3);font-size:12.5px;color:var(--red);display:none}
+.err-found.visible{display:block;animation:fadeUp .2s ease}
+.err-explain{padding:12px 16px;background:var(--green-bg);border-top:1px solid var(--green-d);font-size:12.5px;color:var(--green);display:none;line-height:1.7}
+.err-explain.visible{display:block;animation:fadeUp .2s ease}
+
+/* PREDICTION */
+.pred-choices{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}
+.pred-chip{padding:6px 14px;border-radius:20px;border:1.5px solid var(--bdr);background:var(--surf2);color:var(--text);font-size:12.5px;cursor:pointer;transition:all .18s}
+.pred-chip:hover{border-color:var(--blue-d);color:var(--blue)}
+.pred-chip.correct{background:var(--green-bg);border-color:var(--green);color:var(--green)}
+.pred-chip.wrong{background:var(--red-bg);border-color:var(--red);color:var(--red)}
+
+/* MASTERY CHALLENGE */
+.challenge-q{background:var(--surf);border:1px solid var(--bdr);border-radius:var(--r2);padding:20px;margin-bottom:14px}
+.cq-num{width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,var(--blue-d),var(--violet));display:inline-flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;margin-right:8px;vertical-align:middle}
+.cq-text{font-size:14px;font-weight:600;line-height:1.5;margin-bottom:14px}
+
+/* SUMMARY DASHBOARD */
+.summary-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px;margin:20px 0}
+.summary-card{background:var(--surf2);border:1px solid var(--bdr);border-radius:var(--r2);padding:16px;text-align:center}
+.summary-icon{font-size:28px;margin-bottom:8px}
+.summary-title{font-size:12px;font-weight:700;color:var(--muted);margin-bottom:4px}
+.summary-val{font-size:20px;font-weight:800}
+.mastery-bar-wrap{margin:12px 0}
+.mastery-bar-label{display:flex;justify-content:space-between;font-size:11.5px;color:var(--muted);margin-bottom:4px}
+.mastery-bar{height:8px;background:var(--surf3);border-radius:4px;overflow:hidden}
+.mastery-bar-fill{height:100%;border-radius:4px;transition:width 1s ease}
+.key-takeaway{display:flex;align-items:flex-start;gap:12px;padding:12px 16px;background:var(--surf2);border-radius:var(--r);border:1px solid var(--bdr);margin-bottom:6px}
+.kt-icon{font-size:18px;flex-shrink:0;margin-top:2px}
+.kt-text{font-size:13px;line-height:1.6}
+.kt-code{font-family:'Cascadia Code','Fira Code','Consolas',monospace;color:var(--py-fn);font-size:12px}
+
+/* SECTION FOOTER */
+.sec-footer{margin-top:32px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;padding-top:20px;border-top:1px solid var(--bdr)}
+.pts-earned{font-size:12px;color:var(--yellow);font-weight:700}
+
+/* MISC */
+.divider{border:none;border-top:1px solid var(--bdr);margin:20px 0}
+.label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);margin-bottom:8px;display:block}
+.note{background:var(--surf2);border-left:3px solid var(--blue-d);border-radius:0 var(--r) var(--r) 0;padding:10px 14px;font-size:12.5px;color:var(--muted);margin:10px 0;line-height:1.65}
+.note strong{color:var(--blue)}
+.success-banner{background:var(--green-bg);border:1px solid var(--green-d);border-radius:var(--r2);padding:16px;text-align:center;font-size:14px;color:var(--green);font-weight:700;margin:14px 0;display:none}
+.success-banner.show{display:block;animation:fadeUp .3s ease}
+.section-progress{display:flex;gap:4px;margin-bottom:14px;flex-wrap:wrap}
+.sp-dot{width:6px;height:6px;border-radius:50%;background:var(--surf3)}
+.sp-dot.done{background:var(--green)}
+.sp-dot.active{background:var(--blue)}
+.matching-pair{display:flex;gap:8px;align-items:center;margin-bottom:6px;flex-wrap:wrap}
+.match-left{flex:1;min-width:120px;padding:8px 12px;background:var(--surf2);border:1px solid var(--bdr);border-radius:var(--r);font-size:12.5px;cursor:pointer;transition:all .18s;text-align:center}
+.match-left:hover{border-color:var(--blue-d)}
+.match-left.selected{border-color:var(--blue);background:var(--blue-bg);color:var(--blue)}
+.match-right{flex:1;min-width:120px;padding:8px 12px;background:var(--surf3);border:1px solid var(--bdr);border-radius:var(--r);font-size:12.5px;cursor:pointer;transition:all .18s;text-align:center}
+.match-right:hover{border-color:var(--violet)}
+.match-right.selected{border-color:var(--violet);background:var(--violet-bg);color:var(--violet)}
+.match-pair.matched .match-left,.match-pair.matched .match-right{border-color:var(--green);background:var(--green-bg);color:var(--green);cursor:default}
+.match-pair.wrong-match .match-left,.match-pair.wrong-match .match-right{border-color:var(--red);background:var(--red-bg);color:var(--red)}
+.visible-inline{font-family:'Cascadia Code','Fira Code','Consolas',monospace;background:var(--surf3);padding:1px 6px;border-radius:4px;font-size:12px;color:var(--py-fn);display:inline}
+.checkmark{display:inline-block;width:18px;height:18px;border-radius:50%;background:var(--green);color:#fff;font-size:10px;line-height:18px;text-align:center;font-weight:700}
+.xmark{display:inline-block;width:18px;height:18px;border-radius:50%;background:var(--red);color:#fff;font-size:10px;line-height:18px;text-align:center;font-weight:700}
+</style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div class="top-bar">
+  <div class="top-bar-inner">
+    <div class="site-logo">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+      Python Functions
+    </div>
+    <span class="credit">Curriculum Designer &amp; Developer: Hillary Homai</span>
+    <div class="progress-wrap">
+      <div class="progress-track"><div class="progress-fill" id="topProgress"></div></div>
+    </div>
+    <div class="score-pill">⭐ <span id="scoreDisplay">0</span> pts</div>
+    <div class="nav-dots" id="navDots"></div>
+  </div>
+</div>
+
+<div class="lesson" id="lessonRoot">
+
+<!-- ══════ HERO ══════ -->
+<section class="sec active" id="sec-hero">
+  <div class="hero">
+    <div class="hero-badge">🐍 Interactive Python Lesson</div>
+    <h1 class="hero-title">Python Functions<br>Completely Explained</h1>
+    <p class="hero-sub">From what <strong>def</strong> means to how <strong>return</strong> works — every concept taught precisely, interactively, and without confusion.</p>
+    <p class="hero-credit">Curriculum Designer &amp; Developer: Hillary Homai</p>
+    <button class="btn-start" onclick="goToSection(1)">Begin Lesson →</button>
+    <div class="hero-stats">
+      <div class="hero-stat"><div class="hero-stat-n">13</div><div class="hero-stat-l">Sections</div></div>
+      <div class="hero-stat"><div class="hero-stat-n">60+</div><div class="hero-stat-l">Activities</div></div>
+      <div class="hero-stat"><div class="hero-stat-n">500</div><div class="hero-stat-l">Max Points</div></div>
+      <div class="hero-stat"><div class="hero-stat-n">0</div><div class="hero-stat-l">Prior knowledge needed</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════ S1: WHY FUNCTIONS ══════ -->
+<section class="sec" id="sec-1">
+  <div class="sec-header">
+    <div class="sec-num">1</div>
+    <h2 class="sec-title">Why Functions Exist</h2>
+    <p class="sec-sub">Before learning the syntax, understand the problem functions solve.</p>
+  </div>
+
+  <div class="g2">
+    <div class="card" style="border-color:rgba(248,81,73,.4)">
+      <div class="card-title"><span class="badge b-re">❌ Messy Code</span></div>
+      <div class="code-block">
+<span class="bi">print</span><span class="pu">(</span><span class="st">"Hello, Alice"</span><span class="pu">)</span>
+<span class="bi">print</span><span class="pu">(</span><span class="st">"Hello, Bob"</span><span class="pu">)</span>
+<span class="bi">print</span><span class="pu">(</span><span class="st">"Hello, Carol"</span><span class="pu">)</span>
+<span class="bi">print</span><span class="pu">(</span><span class="st">"Hello, Dana"</span><span class="pu">)</span>
+      </div>
+      <p style="font-size:12.5px;color:var(--muted);line-height:1.65">The word <code class="visible-inline">"Hello,"</code> is repeated four times. If the greeting ever needs to change, every line must be updated manually.</p>
+    </div>
+    <div class="card" style="border-color:rgba(63,185,80,.4)">
+      <div class="card-title"><span class="badge b-gr">✅ Organized Code</span></div>
+      <div class="code-block">
+<span class="kw">def</span> <span class="fn">greet</span><span class="pu">(</span><span class="nm">name</span><span class="pu">):</span>
+<span class="in"><span class="bi">print</span><span class="pu">(</span><span class="st">"Hello, "</span> <span class="pu">+</span> <span class="nm">name</span><span class="pu">)</span></span>
+
+<span class="fn">greet</span><span class="pu">(</span><span class="st">"Alice"</span><span class="pu">)</span>
+<span class="fn">greet</span><span class="pu">(</span><span class="st">"Bob"</span><span class="pu">)</span>
+<span class="fn">greet</span><span class="pu">(</span><span class="st">"Carol"</span><span class="pu">)</span>
+      </div>
+      <p style="font-size:12.5px;color:var(--muted);line-height:1.65">The greeting logic is written once inside the function. Reusing it is as simple as calling <code class="visible-inline">greet()</code> with a different name each time.</p>
+    </div>
+  </div>
+
+  <div class="note"><strong>Key insight:</strong> A function is a named block of instructions you write once and can run as many times as you need. It gives repeated logic a single place to live.</div>
+
+  <div class="card" style="margin-top:18px">
+    <div class="card-title">🧠 Quick Check</div>
+    <p style="font-size:13px;margin-bottom:12px">Look at the messy code. Why is repeating the same greeting logic a problem?</p>
+    <button class="qo" onclick="s1q(this,false)">A. Python doesn't allow print more than once</button>
+    <button class="qo" onclick="s1q(this,true)">B. If the greeting changes, you must update every line separately</button>
+    <button class="qo" onclick="s1q(this,false)">C. Repeated lines cause Python errors</button>
+    <button class="qo" onclick="s1q(this,false)">D. You can only greet three people in a Python program</button>
+    <div class="feedback" id="s1fb"></div>
+  </div>
+
+  <div class="card" style="margin-top:14px">
+    <div class="card-title">🔎 Three reasons functions matter</div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;margin-top:8px">
+      <div style="padding:12px;background:var(--surf2);border-radius:var(--r);border:1px solid var(--bdr)">
+        <div style="font-weight:700;margin-bottom:4px;color:var(--blue)">Reuse</div>
+        <div style="font-size:12.5px;color:var(--muted)">Write the logic once; run it as many times as needed without repeating code.</div>
+      </div>
+      <div style="padding:12px;background:var(--surf2);border-radius:var(--r);border:1px solid var(--bdr)">
+        <div style="font-weight:700;margin-bottom:4px;color:var(--violet)">Organization</div>
+        <div style="font-size:12.5px;color:var(--muted)">Group related instructions together under one name so code is easier to read.</div>
+      </div>
+      <div style="padding:12px;background:var(--surf2);border-radius:var(--r);border:1px solid var(--bdr)">
+        <div style="font-weight:700;margin-bottom:4px;color:var(--green)">Clarity</div>
+        <div style="font-size:12.5px;color:var(--muted)">A function's name describes what it does, making your program logic easier to follow.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sec-footer">
+    <div class="pts-earned" id="s1pts"></div>
+    <button class="btn-nav" onclick="goToSection(2)">Next: Function Anatomy →</button>
+  </div>
+</section>
+
+<!-- ══════ S2: ANATOMY LAB ══════ -->
+<section class="sec" id="sec-2">
+  <div class="sec-header">
+    <div class="sec-num">2</div>
+    <h2 class="sec-title">Function Anatomy Lab</h2>
+    <p class="sec-sub">Click each highlighted part of the function to learn exactly what it does. Every piece has a specific purpose.</p>
+  </div>
+
+  <div class="card">
+    <p style="font-size:12.5px;color:var(--muted);margin-bottom:10px">👇 Click any highlighted part to get a precise explanation:</p>
+    <div class="code-block" style="font-size:15px;line-height:2.5">
+<span class="hl-kw" onclick="showTip('def')">def</span> <span class="hl-fn" onclick="showTip('name')">greet</span><span class="hl-paren" onclick="showTip('parens')">()</span><span class="hl-colon" onclick="showTip('colon')">:</span>
+<span class="hl-indent" onclick="showTip('indent')">    </span><span class="hl-print" onclick="showTip('print')">print</span><span class="pu">(</span><span class="hl-str" onclick="showTip('string')">"Hello"</span><span class="pu">)</span>
+    </div>
+    <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:8px">
+      <span class="badge b-re" style="cursor:pointer" onclick="showTip('def')">def</span>
+      <span class="badge b-gr" style="cursor:pointer" onclick="showTip('name')">greet</span>
+      <span class="badge" style="background:var(--teal-bg);color:var(--teal);border:1px solid rgba(57,208,216,.3);cursor:pointer" onclick="showTip('parens')">()</span>
+      <span class="badge b-ye" style="cursor:pointer" onclick="showTip('colon')">:</span>
+      <span class="badge b-vi" style="cursor:pointer" onclick="showTip('indent')">indentation</span>
+      <span class="badge b-bl" style="cursor:pointer" onclick="showTip('print')">print</span>
+      <span class="badge" style="background:rgba(241,250,140,.1);color:var(--py-str);border:1px solid rgba(241,250,140,.3);cursor:pointer" onclick="showTip('string')">"Hello"</span>
+    </div>
+  </div>
+
+  <div class="anatomy-tooltip" id="anatomyTip">
+    <div id="tipContent"></div>
+  </div>
+
+  <div class="card" style="margin-top:18px">
+    <div class="card-title">🧠 Anatomy Check — 6 questions</div>
+    <div id="anatQs"></div>
+  </div>
+
+  <div class="sec-footer">
+    <div class="pts-earned" id="s2pts"></div>
+    <button class="btn-nav" onclick="goToSection(3)">Next: Define vs Call →</button>
+  </div>
+</section>
+
+<!-- ══════ S3: DEFINE VS CALL ══════ -->
+<section class="sec" id="sec-3">
+  <div class="sec-header">
+    <div class="sec-num">3</div>
+    <h2 class="sec-title">Define vs Call</h2>
+    <p class="sec-sub">Defining a function stores instructions. Calling a function runs them. These are completely different actions.</p>
+  </div>
+
+  <div class="g2">
+    <div class="card" style="border-color:rgba(188,140,255,.4)">
+      <div class="card-title"><span class="badge b-vi">Defining</span></div>
+      <div class="code-block">
+<span class="kw">def</span> <span class="fn">greet</span><span class="pu">():</span>
+<span class="in"><span class="bi">print</span><span class="pu">(</span><span class="st">"Hello"</span><span class="pu">)</span></span>
+      </div>
+      <p style="font-size:12.5px;color:var(--muted);line-height:1.7;margin-top:8px">Python reads these lines and <strong>stores</strong> the instructions under the name <code class="visible-inline">greet</code>. <strong>Nothing runs yet.</strong> No output. No action. Just storage.</p>
+    </div>
+    <div class="card" style="border-color:rgba(63,185,80,.4)">
+      <div class="card-title"><span class="badge b-gr">Calling</span></div>
+      <div class="code-block">
+<span class="fn">greet</span><span class="pu">()</span>
+      </div>
+      <p style="font-size:12.5px;color:var(--muted);line-height:1.7;margin-top:8px">This one line tells Python: <em>"Go find the instructions stored under <code class="visible-inline">greet</code> and run them now."</em> This is when the output actually happens.</p>
+    </div>
+  </div>
+
+  <!-- Execution sequence -->
+  <div class="card" style="margin-top:16px">
+    <div class="card-title">⏱ Step-by-Step Execution</div>
+    <p style="font-size:12.5px;color:var(--muted);margin-bottom:12px">Watch what Python does with each line. Click Next Step:</p>
+    <div class="timeline" id="execTimeline">
+      <div class="tl-step active" id="ts0">
+        <div class="tl-num">1</div>
+        <div class="tl-body">
+          <div class="tl-label">Python reads:</div>
+          <div class="tl-code">def greet():</div>
+          <div class="tl-desc">Python sees <span class="badge b-re">def</span> — it knows a function definition is starting. It reads the name <span class="badge b-gr">greet</span>.</div>
+        </div>
+      </div>
+      <div class="tl-step" id="ts1">
+        <div class="tl-num">2</div>
+        <div class="tl-body">
+          <div class="tl-label">Python stores:</div>
+          <div class="tl-code">greet → { print("Hello") }</div>
+          <div class="tl-desc">Python stores the instructions in memory under the name <span class="badge b-gr">greet</span>. <strong>No output. Nothing runs.</strong> It's like writing a recipe but not cooking yet.</div>
+        </div>
+      </div>
+      <div class="tl-step" id="ts2">
+        <div class="tl-num">3</div>
+        <div class="tl-body">
+          <div class="tl-label">Python reads:</div>
+          <div class="tl-code">greet()</div>
+          <div class="tl-desc">Python sees <span class="badge b-gr">greet</span> followed by <span class="badge" style="background:var(--teal-bg);color:var(--teal);border:1px solid rgba(57,208,216,.3)">()</span> — this is a function call. It looks up the stored instructions for <span class="badge b-gr">greet</span>.</div>
+        </div>
+      </div>
+      <div class="tl-step" id="ts3">
+        <div class="tl-num">4</div>
+        <div class="tl-body">
+          <div class="tl-label">Python executes:</div>
+          <div class="tl-code">print("Hello")</div>
+          <div class="tl-desc">The instruction inside <span class="badge b-gr">greet</span> runs now. Python executes <span class="badge b-bl">print("Hello")</span>.</div>
+        </div>
+      </div>
+      <div class="tl-step" id="ts4">
+        <div class="tl-num">5</div>
+        <div class="tl-body">
+          <div class="tl-label">Output appears:</div>
+          <div class="tl-code" style="color:var(--py-str)">Hello</div>
+          <div class="tl-desc"><span class="checkmark">✓</span> The word Hello appears on screen. This only happened because <span class="badge b-gr">greet()</span> was called on step 3.</div>
+        </div>
+      </div>
+    </div>
+    <div style="display:flex;gap:8px;margin-top:10px">
+      <button class="btn btn-bl" id="tsNext" onclick="nextTlStep()">Next Step ▶</button>
+      <button class="btn btn-ghost" onclick="resetTl()">↺ Reset</button>
+    </div>
+  </div>
+
+  <!-- DVC Quiz -->
+  <div class="card" style="margin-top:18px">
+    <div class="card-title">🎯 Classify Each Line</div>
+    <p style="font-size:12.5px;color:var(--muted);margin-bottom:14px">For each line of code, click whether it is <strong>Defining</strong>, <strong>Calling</strong>, or <strong>Neither</strong>:</p>
+    <div id="dvcQuiz"></div>
+    <div class="feedback" id="dvcFeedback"></div>
+  </div>
+
+  <div class="sec-footer">
+    <div class="pts-earned" id="s3pts"></div>
+    <button class="btn-nav" onclick="goToSection(4)">Next: print vs return →</button>
+  </div>
+</section>
+
+<!-- ══════ S4: PRINT VS RETURN ══════ -->
+<section class="sec" id="sec-4">
+  <div class="sec-header">
+    <div class="sec-num">4</div>
+    <h2 class="sec-title">print vs return — And How result Works</h2>
+    <p class="sec-sub">This is where most beginners get confused. We will make it completely clear.</p>
+  </div>
+
+  <div class="g2">
+    <div class="card" style="border-color:rgba(88,166,255,.4)">
+      <div class="card-title"><span class="badge b-bl">print()</span> — Displays</div>
+      <div class="code-block">
+<span class="kw">def</span> <span class="fn">show_sum</span><span class="pu">(</span><span class="nm">a</span><span class="pu">,</span> <span class="nm">b</span><span class="pu">):</span>
+<span class="in"><span class="bi">print</span><span class="pu">(</span><span class="nm">a</span> <span class="pu">+</span> <span class="nm">b</span><span class="pu">)</span></span>
+
+<span class="fn">show_sum</span><span class="pu">(</span><span class="nm">3</span><span class="pu">,</span> <span class="nm">5</span><span class="pu">)</span>
+<span class="cm"># Output: 8</span>
+      </div>
+      <ul style="font-size:12.5px;color:var(--muted);line-height:1.8;padding-left:16px;margin-top:8px">
+        <li><strong style="color:var(--blue)">Displays</strong> the value on screen for the user to see</li>
+        <li>The value <strong>cannot be stored</strong> or reused later</li>
+        <li><code class="visible-inline">result = show_sum(3, 5)</code> stores <strong>None</strong>, not 8</li>
+        <li>print is like a one-way loudspeaker — it announces but doesn't hand anything back</li>
+      </ul>
+    </div>
+    <div class="card" style="border-color:rgba(63,185,80,.4)">
+      <div class="card-title"><span class="badge b-gr">return</span> — Sends Back</div>
+      <div class="code-block">
+<span class="kw">def</span> <span class="fn">add</span><span class="pu">(</span><span class="nm">a</span><span class="pu">,</span> <span class="nm">b</span><span class="pu">):</span>
+<span class="in"><span class="kw">return</span> <span class="nm">a</span> <span class="pu">+</span> <span class="nm">b</span></span>
+
+<span class="nm">result</span> <span class="pu">=</span> <span class="fn">add</span><span class="pu">(</span><span class="nm">3</span><span class="pu">,</span> <span class="nm">5</span><span class="pu">)</span>
+<span class="bi">print</span><span class="pu">(</span><span class="nm">result</span><span class="pu">)</span>
+<span class="cm"># Output: 8</span>
+      </div>
+      <ul style="font-size:12.5px;color:var(--muted);line-height:1.8;padding-left:16px;margin-top:8px">
+        <li><strong style="color:var(--green)">Sends the value back</strong> to wherever the function was called</li>
+        <li>The value <strong>can be stored</strong> in a variable for later use</li>
+        <li><code class="visible-inline">result = add(3, 5)</code> stores <strong>8</strong></li>
+        <li>return is like a two-way exchange — the function hands something back</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Execution timeline for add -->
+  <div class="card" style="margin-top:16px">
+    <div class="card-title">⏱ Follow the value 8 through the program</div>
+    <div class="code-block" style="margin-bottom:14px">
+<span class="kw">def</span> <span class="fn">add</span><span class="pu">(</span><span class="nm">a</span><span class="pu">,</span> <span class="nm">b</span><span class="pu">):</span>
+<span class="in"><span class="kw">return</span> <span class="nm">a</span> <span class="pu">+</span> <span class="nm">b</span></span>
+<span class="nm">result</span> <span class="pu">=</span> <span class="fn">add</span><span class="pu">(</span><span class="nm">3</span><span class="pu">,</span> <span class="nm">5</span><span class="pu">)</span>
+<span class="bi">print</span><span class="pu">(</span><span class="nm">result</span><span class="pu">)</span>
+    </div>
+    <div class="timeline">
+      <div class="tl-step active">
+        <div class="tl-num" style="background:var(--violet-bg);color:var(--violet);border:2px solid var(--violet)">→</div>
+        <div class="tl-body"><div class="tl-label">Step 1: Call</div><div class="tl-desc"><span class="badge b-gr">add(3, 5)</span> is called. Python passes 3 and 5 into the function as <code class="visible-inline">a</code> and <code class="visible-inline">b</code>.</div></div>
+      </div>
+      <div class="tl-step active">
+        <div class="tl-num" style="background:var(--violet-bg);color:var(--violet);border:2px solid var(--violet)">→</div>
+        <div class="tl-body"><div class="tl-label">Step 2: Calculate</div><div class="tl-desc">Inside the function: <code class="visible-inline">a + b</code> becomes <code class="visible-inline">3 + 5</code> which equals <span class="badge b-ye">8</span>.</div></div>
+      </div>
+      <div class="tl-step active">
+        <div class="tl-num" style="background:var(--violet-bg);color:var(--violet);border:2px solid var(--violet)">→</div>
+        <div class="tl-body"><div class="tl-label">Step 3: Return</div><div class="tl-desc"><span class="badge b-gr">return</span> sends the value <span class="badge b-ye">8</span> back out of the function to where it was called.</div></div>
+      </div>
+      <div class="tl-step active">
+        <div class="tl-num" style="background:var(--violet-bg);color:var(--violet);border:2px solid var(--violet)">→</div>
+        <div class="tl-body"><div class="tl-label">Step 4: Store</div><div class="tl-desc"><code class="visible-inline">result = add(3, 5)</code> — the variable <span class="badge b-vi">result</span> now holds <span class="badge b-ye">8</span>. Nothing is displayed yet.</div></div>
+      </div>
+      <div class="tl-step active">
+        <div class="tl-num" style="background:var(--violet-bg);color:var(--violet);border:2px solid var(--violet)">→</div>
+        <div class="tl-body"><div class="tl-label">Step 5: Display</div><div class="tl-desc"><code class="visible-inline">print(result)</code> reads the value inside <span class="badge b-vi">result</span> — which is <span class="badge b-ye">8</span> — and displays it. Output: <strong style="color:var(--py-str)">8</strong></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:16px">
+    <div class="card-title">🧠 Comparison Table</div>
+    <div style="overflow-x:auto">
+    <table class="cmp-table">
+      <thead><tr><th>Question</th><th>print()</th><th>return</th></tr></thead>
+      <tbody>
+        <tr><td>Does it show output on screen?</td><td><span class="checkmark">✓</span> Yes</td><td><span class="xmark">✗</span> No — only sends back</td></tr>
+        <tr><td>Can its value be stored?</td><td><span class="xmark">✗</span> No — the value disappears</td><td><span class="checkmark">✓</span> Yes, with assignment</td></tr>
+        <tr><td>What does result = f() store?</td><td><code class="visible-inline">None</code></td><td>Whatever was returned</td></tr>
+        <tr><td>Can the value be used again later?</td><td><span class="xmark">✗</span> No</td><td><span class="checkmark">✓</span> Yes, through result</td></tr>
+        <tr><td>Where does the value go?</td><td>To the screen only</td><td>Back to the calling code</td></tr>
+      </tbody>
+    </table>
+    </div>
+  </div>
+
+  <!-- Prediction tasks -->
+  <div class="card" style="margin-top:16px">
+    <div class="card-title">🔮 Prediction Questions</div>
+    <div id="printReturnQs"></div>
+  </div>
+
+  <div class="sec-footer">
+    <div class="pts-earned" id="s4pts"></div>
+    <button class="btn-nav" onclick="goToSection(5)">Next: Parameters →</button>
+  </div>
+</section>
+
+<!-- ══════ S5: PARAMETERS ══════ -->
+<section class="sec" id="sec-5">
+  <div class="sec-header">
+    <div class="sec-num">5</div>
+    <h2 class="sec-title">Parameters &amp; Inputs</h2>
+    <p class="sec-sub">Functions can receive information to work with. Parameters are how you provide that information.</p>
+  </div>
+
+  <div class="note">A <strong>parameter</strong> is a variable listed in the function definition that acts as a placeholder for the value that will be passed in. An <strong>argument</strong> is the actual value you pass when calling the function.</div>
+
+  <div class="cg" style="margin-top:16px">
+    <div class="card" style="border-color:rgba(57,208,216,.3)">
+      <div class="card-title">No parameters</div>
+      <div class="code-block" style="font-size:13px">
+<span class="kw">def</span> <span class="fn">greet</span><span class="pu">():</span>
+<span class="in"><span class="bi">print</span><span class="pu">(</span><span class="st">"Hello"</span><span class="pu">)</span></span>
+
+<span class="fn">greet</span><span class="pu">()</span>
+      </div>
+      <p style="font-size:12px;color:var(--muted);margin-top:8px">Empty parentheses <code class="visible-inline">()</code> means the function needs no input. It always does the same thing.</p>
+    </div>
+    <div class="card" style="border-color:rgba(80,250,123,.3)">
+      <div class="card-title">One parameter</div>
+      <div class="code-block" style="font-size:13px">
+<span class="kw">def</span> <span class="fn">greet</span><span class="pu">(</span><span class="nm">name</span><span class="pu">):</span>
+<span class="in"><span class="bi">print</span><span class="pu">(</span><span class="st">"Hello, "</span> <span class="pu">+</span> <span class="nm">name</span><span class="pu">)</span></span>
+
+<span class="fn">greet</span><span class="pu">(</span><span class="st">"Alice"</span><span class="pu">)</span>
+      </div>
+      <p style="font-size:12px;color:var(--muted);margin-top:8px"><code class="visible-inline">name</code> is the parameter. <code class="visible-inline">"Alice"</code> is the argument passed in.</p>
+    </div>
+    <div class="card" style="border-color:rgba(188,140,255,.3)">
+      <div class="card-title">Two parameters</div>
+      <div class="code-block" style="font-size:13px">
+<span class="kw">def</span> <span class="fn">add</span><span class="pu">(</span><span class="nm">a</span><span class="pu">,</span> <span class="nm">b</span><span class="pu">):</span>
+<span class="in"><span class="kw">return</span> <span class="nm">a</span> <span class="pu">+</span> <span class="nm">b</span></span>
+
+<span class="fn">add</span><span class="pu">(</span><span class="nm">3</span><span class="pu">,</span> <span class="nm">5</span><span class="pu">)</span>
+      </div>
+      <p style="font-size:12px;color:var(--muted);margin-top:8px">Arguments are matched to parameters in order: <code class="visible-inline">a=3</code>, <code class="visible-inline">b=5</code>.</p>
+    </div>
+  </div>
+
+  <!-- Visual slot diagram -->
+  <div class="card" style="margin-top:16px">
+    <div class="card-title">🎰 Parameter Slot Diagram</div>
+    <p style="font-size:12.5px;color:var(--muted);margin-bottom:12px">Each argument value slides into a parameter slot inside the function:</p>
+    <div class="param-diagram">
+      <span class="param-slot ps-fn">add</span>
+      <span class="param-slot ps-pu">(</span>
+      <span class="param-slot ps-pa" id="arg1" title="Argument → becomes parameter a">3</span>
+      <span class="param-slot ps-pu">,</span>
+      <span class="param-slot ps-pa" id="arg2" title="Argument → becomes parameter b">5</span>
+      <span class="param-slot ps-pu">)</span>
+      <span style="padding:0 10px;color:var(--muted);font-size:20px">→</span>
+      <span class="param-slot ps-kw">def add(</span>
+      <span class="param-slot ps-num" title="a receives 3">a=3</span>
+      <span class="param-slot ps-kw">,</span>
+      <span class="param-slot ps-num" title="b receives 5">b=5</span>
+      <span class="param-slot ps-kw">)</span>
+    </div>
+    <div class="note" style="margin-top:10px">Arguments are matched <strong>by position</strong>. The first argument goes to the first parameter, the second to the second, and so on.</div>
+  </div>
+
+  <!-- Matching activity -->
+  <div class="card" style="margin-top:16px">
+    <div class="card-title">🔗 Matching — Terms to Definitions</div>
+    <p style="font-size:12.5px;color:var(--muted);margin-bottom:12px">Click a term on the left, then click its definition on the right to match them:</p>
+    <div id="matchingActivity"></div>
+    <div class="feedback" id="matchFeedback"></div>
+  </div>
+
+  <div class="card" style="margin-top:16px">
+    <div class="card-title">🧠 Parameter Questions</div>
+    <div id="paramQs"></div>
+  </div>
+
+  <div class="sec-footer">
+    <div class="pts-earned" id="s5pts"></div>
+    <button class="btn-nav" onclick="goToSection(6)">Next: Misconception Zone →</button>
+  </div>
+</section>
+
+<!-- ══════ S6: MISCONCEPTIONS ══════ -->
+<section class="sec" id="sec-6">
+  <div class="sec-header">
+    <div class="sec-num">6</div>
+    <h2 class="sec-title">Fix the Confusion Zone</h2>
+    <p class="sec-sub">These are the exact misunderstandings most beginners have. Click each to see the precise correction.</p>
+  </div>
+
+  <div id="misconceptions"></div>
+
+  <div class="sec-footer">
+    <div class="pts-earned" id="s6pts"></div>
+    <button class="btn-nav" onclick="goToSection(7)">Next: Build the Meaning →</button>
+  </div>
+</section>
+
+<!-- ══════ S7: BUILD THE MEANING ══════ -->
+<section class="sec" id="sec-7">
+  <div class="sec-header">
+    <div class="sec-num">7</div>
+    <h2 class="sec-title">Build the Function Meaning</h2>
+    <p class="sec-sub">Reconstruct understanding from pieces — ordering, sorting, and sequencing.</p>
+  </div>
+
+  <!-- Ordering task -->
+  <div class="card">
+    <div class="card-title">📐 Task 1 — Put the Function Parts in Order</div>
+    <p style="font-size:12.5px;color:var(--muted);margin-bottom:12px">Drag to reorder these parts into the correct sequence for defining a function:</p>
+    <ul class="order-list" id="orderList"></ul>
+    <button class="btn btn-bl btn-sm" onclick="checkOrder()" style="margin-top:8px">Check Order</button>
+    <div class="feedback" id="orderFeedback"></div>
+  </div>
+
+  <!-- Sort activity -->
+  <div class="card" style="margin-top:16px">
+    <div class="card-title">🗂 Task 2 — Sort Into Categories</div>
+    <p style="font-size:12.5px;color:var(--muted);margin-bottom:12px">Click each item, then click the correct bin to sort it:</p>
+    <div style="margin-bottom:10px">
+      <div style="display:flex;flex-wrap:wrap;gap:6px" id="sortItems"></div>
+    </div>
+    <div class="sort-bins">
+      <div class="sort-bin"><div class="sort-bin-title" style="color:var(--violet)">Displays on screen</div><div class="sort-items" id="bin-display"></div></div>
+      <div class="sort-bin"><div class="sort-bin-title" style="color:var(--blue)">Stored in memory</div><div class="sort-items" id="bin-stored"></div></div>
+      <div class="sort-bin"><div class="sort-bin-title" style="color:var(--green)">Runs the function</div><div class="sort-items" id="bin-calls"></div></div>
+      <div class="sort-bin"><div class="sort-bin-title" style="color:var(--yellow)">Defines the function</div><div class="sort-items" id="bin-defines"></div></div>
+    </div>
+    <button class="btn btn-bl btn-sm" onclick="checkSort()" style="margin-top:4px">Check Sort</button>
+    <div class="feedback" id="sortFeedback"></div>
+  </div>
+
+  <div class="sec-footer">
+    <div class="pts-earned" id="s7pts"></div>
+    <button class="btn-nav" onclick="goToSection(8)">Next: Competency Checks →</button>
+  </div>
+</section>
+
+<!-- ══════ S8: COMPETENCY CHECKS ══════ -->
+<section class="sec" id="sec-8">
+  <div class="sec-header">
+    <div class="sec-num">8</div>
+    <h2 class="sec-title">Competency Checks</h2>
+    <p class="sec-sub">Five rounds of increasing difficulty. Each round tests a higher level of thinking.</p>
+  </div>
+
+  <div class="stab-row" style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px">
+    <button class="btn btn-bl btn-sm" onclick="showRound(0)" id="rb0">Round A: Recognition</button>
+    <button class="btn btn-ghost btn-sm" onclick="showRound(1)" id="rb1">Round B: Explanation</button>
+    <button class="btn btn-ghost btn-sm" onclick="showRound(2)" id="rb2">Round C: Debugging</button>
+    <button class="btn btn-ghost btn-sm" onclick="showRound(3)" id="rb3">Round D: Prediction</button>
+    <button class="btn btn-ghost btn-sm" onclick="showRound(4)" id="rb4">Round E: Application</button>
+  </div>
+
+  <div id="roundA" class="round-content"></div>
+  <div id="roundB" class="round-content" style="display:none"></div>
+  <div id="roundC" class="round-content" style="display:none"></div>
+  <div id="roundD" class="round-content" style="display:none"></div>
+  <div id="roundE" class="round-content" style="display:none"></div>
+
+  <div class="sec-footer">
+    <div class="pts-earned" id="s8pts"></div>
+    <button class="btn-nav" onclick="goToSection(9)">Next: Error Detective →</button>
+  </div>
+</section>
+
+<!-- ══════ S9: ERROR DETECTIVE ══════ -->
+<section class="sec" id="sec-9">
+  <div class="sec-header">
+    <div class="sec-num">9</div>
+    <h2 class="sec-title">Error Detective</h2>
+    <p class="sec-sub">Each code block below has a mistake. Click the error line when you spot it, then read the explanation.</p>
+  </div>
+  <div id="errorCases"></div>
+  <div class="sec-footer">
+    <div class="pts-earned" id="s9pts"></div>
+    <button class="btn-nav" onclick="goToSection(10)">Next: Higher-Order Thinking →</button>
+  </div>
+</section>
+
+<!-- ══════ S10: HIGHER ORDER ══════ -->
+<section class="sec" id="sec-10">
+  <div class="sec-header">
+    <div class="sec-num">10</div>
+    <h2 class="sec-title">Higher-Order Thinking</h2>
+    <p class="sec-sub">Apply what you know. Analyze each scenario and decide what kind of function design is needed.</p>
+  </div>
+  <div id="higherOrder"></div>
+  <div class="sec-footer">
+    <div class="pts-earned" id="s10pts"></div>
+    <button class="btn-nav" onclick="goToSection(11)">Next: Mastery Challenge →</button>
+  </div>
+</section>
+
+<!-- ══════ S11: MASTERY CHALLENGE ══════ -->
+<section class="sec" id="sec-11">
+  <div class="sec-header">
+    <div class="sec-num">11</div>
+    <h2 class="sec-title">🏆 Mini Mastery Challenge</h2>
+    <p class="sec-sub">Cumulative final challenge. Answer every question. Your final score is calculated at the end.</p>
+  </div>
+  <div id="masteryChallenge"></div>
+  <div id="masteryResult" style="display:none">
+    <div class="success-banner show" id="masteryBanner"></div>
+  </div>
+  <div class="sec-footer">
+    <div class="pts-earned" id="s11pts"></div>
+    <button class="btn-nav" onclick="goToSection(12)">Next: Summary Dashboard →</button>
+  </div>
+</section>
+
+<!-- ══════ S12: SUMMARY ══════ -->
+<section class="sec" id="sec-12">
+  <div class="sec-header">
+    <div class="sec-num">12</div>
+    <h2 class="sec-title">Summary Dashboard</h2>
+    <p class="sec-sub">Here's what you've learned and how well you've mastered each concept.</p>
+  </div>
+
+  <div class="summary-grid" id="summaryGrid"></div>
+
+  <h3 style="font-size:16px;font-weight:700;margin:20px 0 12px">📊 Concept Mastery</h3>
+  <div id="masteryBars"></div>
+
+  <h3 style="font-size:16px;font-weight:700;margin:24px 0 12px">🔑 Key Takeaways</h3>
+  <div id="keyTakeaways"></div>
+
+  <div class="card" style="margin-top:20px;text-align:center;background:linear-gradient(135deg,rgba(31,111,235,.12),rgba(188,140,255,.08));border-color:rgba(88,166,255,.3)">
+    <div style="font-size:28px;margin-bottom:8px">🎓</div>
+    <div style="font-size:18px;font-weight:800;margin-bottom:6px">Lesson Complete</div>
+    <div style="font-size:13px;color:var(--muted);margin-bottom:16px">Curriculum Designer &amp; Developer: Hillary Homai</div>
+    <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
+      <button class="btn btn-bl" onclick="restartLesson()">↺ Restart Lesson</button>
+      <button class="btn btn-gr" onclick="reviewMistakes()">Review Weak Areas</button>
+    </div>
+  </div>
+</section>
+
+</div><!-- end lessonRoot -->
+
+<script>
+// ════════════════════════════════════════════════
+// STATE
+// ════════════════════════════════════════════════
+let currentSection = 0;
+const totalSections = 13; // 0=hero, 1-12
+let score = 0;
+let sectionScores = new Array(13).fill(0);
+let sectionAnswered = {};
+
+function addScore(pts, secIdx) {
+  score += pts;
+  sectionScores[secIdx] = (sectionScores[secIdx] || 0) + pts;
+  document.getElementById('scoreDisplay').textContent = score;
+  const pEl = document.getElementById('s' + secIdx + 'pts');
+  if (pEl) pEl.textContent = '+' + pts + ' pts earned!';
+}
+
+// ════════════════════════════════════════════════
+// NAVIGATION
+// ════════════════════════════════════════════════
+function goToSection(n) {
+  document.querySelectorAll('.sec').forEach(s => s.classList.remove('active'));
+  const el = n === 0 ? document.getElementById('sec-hero') : document.getElementById('sec-' + n);
+  if (el) { el.classList.add('active'); }
+  currentSection = n;
+  updateProgress();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  buildNavDots();
+}
+
+function updateProgress() {
+  const pct = Math.round((currentSection / 12) * 100);
+  document.getElementById('topProgress').style.width = pct + '%';
+}
+
+function buildNavDots() {
+  const c = document.getElementById('navDots');
+  c.innerHTML = '';
+  for (let i = 0; i <= 12; i++) {
+    const d = document.createElement('div');
+    d.className = 'nav-dot' + (i < currentSection ? ' done' : '') + (i === currentSection ? ' active' : '');
+    d.title = i === 0 ? 'Home' : 'Section ' + i;
+    d.onclick = () => goToSection(i);
+    c.appendChild(d);
+  }
+}
+buildNavDots();
+
+// ════════════════════════════════════════════════
+// SECTION 1 — Why Functions
+// ════════════════════════════════════════════════
+let s1answered = false;
+function s1q(btn, correct) {
+  if (s1answered) return;
+  s1answered = true;
+  const btns = btn.closest('.card').querySelectorAll('.qo');
+  btns.forEach(b => b.setAttribute('disabled', true));
+  const fb = document.getElementById('s1fb');
+  if (correct) {
+    btn.classList.add('correct');
+    fb.className = 'feedback show fb-c';
+    fb.innerHTML = '✅ <strong>Correct.</strong> When logic is repeated across many lines, any change must be made in every location — which is error-prone and tedious. Functions solve this by giving repeated logic a single home.';
+    addScore(10, 1);
+  } else {
+    btn.classList.add('wrong');
+    fb.className = 'feedback show fb-w';
+    fb.innerHTML = '❌ <strong>Not quite.</strong> Python can use print as many times as needed. The real problem is that repeated code becomes hard to update. If "Hello," needs to change to "Hi,", every single print line must be edited.';
+  }
+}
+
+// ════════════════════════════════════════════════
+// SECTION 2 — Anatomy Lab
+// ════════════════════════════════════════════════
+const tips = {
+  'def': {
+    color: 'var(--py-kw)',
+    label: 'Keyword',
+    title: 'def — A Python keyword',
+    body: 'def is a reserved word in Python that means "I am about to define a function." It always starts a function definition and is always followed by the function name. You cannot use def for anything else — it has one specific role.',
+    confusion: 'Some students think def actually runs something. It does not. def is an announcement: "Here comes a function definition." Nothing is executed when Python reads def.'
+  },
+  'name': {
+    color: 'var(--py-fn)',
+    label: 'Function Name',
+    title: 'greet — The function name',
+    body: 'The name you give the function directly after def. You choose this name. It should describe what the function does. Python stores the instructions under this exact name so you can call the function by name later. Rules: no spaces, no starting with a number, cannot be a Python keyword.',
+    confusion: 'greet is not built into Python — you made it up. It is stored only after this definition is read. Before this line, greet does not exist in Python\'s memory.'
+  },
+  'parens': {
+    color: 'var(--teal)',
+    label: 'Parentheses',
+    title: '() — The parentheses',
+    body: 'Parentheses are required in every function definition and every function call. In a definition, they list the parameters (inputs) the function expects. When empty, it means the function needs no inputs. When calling the function, the parentheses hold the actual values you pass in.',
+    confusion: 'Empty parentheses do NOT mean "no function." They mean "this function takes no inputs." If you write greet without parentheses, you are not calling the function — you are just referencing its name as a value.'
+  },
+  'colon': {
+    color: 'var(--yellow)',
+    label: 'Colon',
+    title: ': — The colon',
+    body: 'The colon marks the end of the function header and signals that the function body starts on the next line. Python uses colons to introduce blocks of code — you\'ll see this with if statements, loops, and functions. It is not optional.',
+    confusion: 'The colon is not decoration. Without it, Python raises a SyntaxError immediately. It is Python\'s way of saying "the next indented block belongs to this function."'
+  },
+  'indent': {
+    color: 'var(--violet)',
+    label: 'Indentation',
+    title: '    (4 spaces) — Indentation',
+    body: 'Every line that belongs to the function body must be indented — typically 4 spaces. Python uses indentation to define what is inside the function and what is outside it. This is not cosmetic: it is how Python understands your program\'s structure.',
+    confusion: 'In many other programming languages, curly braces {} define blocks. Python uses indentation instead. Inconsistent indentation causes IndentationError or logic bugs where code accidentally runs outside the function.'
+  },
+  'print': {
+    color: 'var(--blue)',
+    label: 'Built-in Command',
+    title: 'print — A built-in function',
+    body: 'print is a function that Python provides for you. It takes what you give it and displays it on the screen. You do not define print — it already exists in Python. This is different from greet, which you defined yourself.',
+    confusion: 'print and return are very different. print displays something visually. return sends a value back from your function so it can be stored or reused. print does NOT store the value — after it displays, it\'s gone.'
+  },
+  'string': {
+    color: 'var(--py-str)',
+    label: 'String Value',
+    title: '"Hello" — A string literal',
+    body: 'Text surrounded by quotes is called a string. This is the actual data that print will display. Strings are one of Python\'s basic data types. The quotes tell Python: "this is text, not a variable name or command."',
+    confusion: 'Without quotes, Python would look for a variable named Hello. With quotes, Python treats it as literal text. Both single quotes (\') and double quotes (") create strings in Python.'
+  }
+};
+
+function showTip(key) {
+  const tip = tips[key];
+  const c = document.getElementById('tipContent');
+  c.innerHTML = `
+    <div class="tip-label" style="color:${tip.color}">${tip.label}</div>
+    <div class="tip-title" style="color:${tip.color}">${tip.title}</div>
+    <div class="tip-body">${tip.body}</div>
+    <button class="btn btn-ye btn-sm" onclick="toggleConfusion(this)">⚠️ Common Confusion</button>
+    <div class="tip-confusion"><div class="tip-confusion-lbl">⚠️ Common Confusion</div>${tip.confusion}</div>
+  `;
+  document.getElementById('anatomyTip').className = 'anatomy-tooltip visible';
+}
+
+function toggleConfusion(btn) {
+  const el = btn.nextElementSibling;
+  el.classList.toggle('open');
+  btn.textContent = el.classList.contains('open') ? '▲ Hide' : '⚠️ Common Confusion';
+}
+
+const anatData = [
+  { q: 'What does the keyword def tell Python?', opts: ['Run the following function immediately', 'A new function definition is starting — store it, don\'t run it yet', 'Display the following text', 'Define a variable'], c: 1, r: 'def signals the start of a function definition. Python reads and stores the instructions — it does not execute them. Nothing runs simply because def was written.' },
+  { q: 'What is the function name in: def calculate():', opts: ['def', 'calculate', '()', ':'], c: 1, r: 'The function name is the identifier you write directly after def. Here it is calculate. This is the name Python stores the function under and the name you use to call it later.' },
+  { q: 'Why are parentheses required even when empty?', opts: ['To make the code look like a function', 'Parentheses are not actually required', 'They are part of function syntax — they indicate where parameters go (even when there are none)', 'They tell Python where the function ends'], c: 2, r: 'Parentheses are mandatory in Python function syntax. Empty parentheses () mean the function takes no parameters. They are not optional formatting — they are structural Python syntax.' },
+  { q: 'What does the colon : do in def greet():', opts: ['It ends the program', 'It signals the start of the indented function body on the next line', 'It separates the function name from its output', 'It is optional spacing'], c: 1, r: 'The colon is required and tells Python that the function body (the indented block) starts on the next line. Without it, Python raises a SyntaxError.' },
+  { q: 'What is the role of indentation inside a function?', opts: ['It makes the code look tidy', 'It marks which lines belong to the function body — Python requires it structurally', 'It speeds up the code', 'It prevents errors by adding extra space'], c: 1, r: 'Python uses indentation (not curly braces like other languages) to determine which lines belong inside the function. Incorrect indentation causes structural errors.' },
+  { q: 'Which of these is a built-in Python function?', opts: ['greet', 'add', 'calculate', 'print'], c: 3, r: 'print is a built-in function — Python provides it. Functions like greet, add, and calculate are examples that you would define yourself. Built-ins are ready to use without definition.' }
+];
+
+(function buildAnatQs() {
+  let html = '';
+  let answered = {};
+  anatData.forEach((q, i) => {
+    html += `<div style="margin-bottom:16px;padding-top:${i>0?'14px':'0'};${i>0?'border-top:1px solid var(--bdr)':''}" id="anatq-${i}">
+      <p style="font-size:13px;font-weight:600;margin-bottom:10px">${i+1}. ${q.q}</p>
+      ${q.opts.map((o,j)=>`<button class="qo" onclick="anatAns(${i},${j})">${String.fromCharCode(65+j)}. ${o}</button>`).join('')}
+      <div class="feedback" id="anatfb-${i}"></div>
+    </div>`;
+  });
+  document.getElementById('anatQs').innerHTML = html;
+  window.anatAns = function(qi, ci) {
+    if (answered[qi]) return;
+    answered[qi] = true;
+    const q = anatData[qi];
+    const btns = document.getElementById('anatq-' + qi).querySelectorAll('.qo');
+    btns.forEach(b => b.setAttribute('disabled', true));
+    btns[ci].classList.add(ci === q.c ? 'correct' : 'wrong');
+    if (ci !== q.c) btns[q.c].classList.add('correct');
+    const fb = document.getElementById('anatfb-' + qi);
+    fb.className = 'feedback show ' + (ci === q.c ? 'fb-c' : 'fb-w');
+    fb.innerHTML = (ci === q.c ? '✅ ' : '❌ ') + q.r;
+    if (ci === q.c) addScore(5, 2);
+  };
+})();
+
+// ════════════════════════════════════════════════
+// SECTION 3 — Define vs Call + Timeline
+// ════════════════════════════════════════════════
+let tsStep = 0;
+const tsSteps = ['ts0','ts1','ts2','ts3','ts4'];
+function nextTlStep() {
+  if (tsStep > 0) document.getElementById(tsSteps[tsStep - 1]).classList.replace('active', 'done');
+  tsStep++;
+  if (tsStep < tsSteps.length) {
+    document.getElementById(tsSteps[tsStep]).classList.add('active');
+  } else {
+    document.getElementById('tsNext').disabled = true;
+    addScore(5, 3);
+  }
+}
+function resetTl() { tsStep = 0; tsSteps.forEach(id => { const el = document.getElementById(id); el.classList.remove('done', 'active'); }); document.getElementById('ts0').classList.add('active'); document.getElementById('tsNext').disabled = false; }
+
+const dvcLines = [
+  { code: 'def add(a, b):', correct: 'defining', display: '<span class="kw">def</span> <span class="fn">add</span><span class="pu">(</span><span class="nm">a</span><span class="pu">,</span> <span class="nm">b</span><span class="pu">):</span>' },
+  { code: 'add(3, 5)', correct: 'calling', display: '<span class="fn">add</span><span class="pu">(</span><span class="nm">3</span><span class="pu">,</span> <span class="nm">5</span><span class="pu">)</span>' },
+  { code: 'x = 10', correct: 'neither', display: '<span class="nm">x</span> <span class="pu">=</span> <span class="nm">10</span>' },
+  { code: 'def greet(name):', correct: 'defining', display: '<span class="kw">def</span> <span class="fn">greet</span><span class="pu">(</span><span class="nm">name</span><span class="pu">):</span>' },
+  { code: 'greet("Alice")', correct: 'calling', display: '<span class="fn">greet</span><span class="pu">(</span><span class="st">"Alice"</span><span class="pu">)</span>' },
+  { code: 'result = add(2, 4)', correct: 'calling', display: '<span class="nm">result</span> <span class="pu">=</span> <span class="fn">add</span><span class="pu">(</span><span class="nm">2</span><span class="pu">,</span> <span class="nm">4</span><span class="pu">)</span>' },
+  { code: 'print("done")', correct: 'neither', display: '<span class="bi">print</span><span class="pu">(</span><span class="st">"done"</span><span class="pu">)</span>' }
+];
+let dvcAnswered = {}, dvcScore = 0;
+(function buildDvc() {
+  let html = '';
+  dvcLines.forEach((l, i) => {
+    html += `<div class="dvc-line" id="dvcl-${i}">
+      <div class="dvc-code">${l.display}</div>
+      <div class="dvc-btns">
+        <button class="dvc-btn" onclick="dvcAns(${i},'defining')">Defining</button>
+        <button class="dvc-btn" onclick="dvcAns(${i},'calling')">Calling</button>
+        <button class="dvc-btn" onclick="dvcAns(${i},'neither')">Neither</button>
+      </div>
+    </div>`;
+  });
+  document.getElementById('dvcQuiz').innerHTML = html;
+})();
+
+function dvcAns(i, choice) {
+  if (dvcAnswered[i]) return;
+  dvcAnswered[i] = true;
+  const l = dvcLines[i];
+  const btns = document.getElementById('dvcl-' + i).querySelectorAll('.dvc-btn');
+  btns.forEach(b => { b.setAttribute('disabled', true); if (b.textContent.toLowerCase() === l.correct) b.classList.add('sel-correct'); });
+  const chosen = Array.from(btns).find(b => b.textContent.toLowerCase() === choice);
+  if (choice === l.correct) { if (!chosen.classList.contains('sel-correct')) chosen.classList.add('sel-correct'); addScore(5, 3); dvcScore++; } else { chosen.classList.add('sel-wrong'); }
+  const totalAnswered = Object.keys(dvcAnswered).length;
+  if (totalAnswered === dvcLines.length) {
+    const fb = document.getElementById('dvcFeedback');
+    fb.className = 'feedback show fb-info';
+    fb.innerHTML = `✅ All classified! You got ${dvcScore}/${dvcLines.length} correct.<br><strong>Key rule:</strong> A line that starts with <code class="visible-inline">def</code> is defining. A line using the function name followed by <code class="visible-inline">()</code> is calling. Assignment and standalone built-in calls like <code class="visible-inline">print()</code> are neither (they are statements).`;
+  }
+}
+
+// ════════════════════════════════════════════════
+// SECTION 4 — print vs return
+// ════════════════════════════════════════════════
+const prQs = [
+  { q: 'What does print("hello") do with the word "hello"?', opts: ['Stores it in a variable', 'Sends it back to the calling code', 'Displays it on the screen — the value cannot be stored after this', 'Returns it to be reused'], c: 2, r: 'print displays a value on the screen. Once displayed, the value is not stored anywhere. You cannot assign the result of print to a variable and get the value — you would get None.' },
+  { q: 'A function uses only print to show 8. What does result = my_func() store?', opts: ['8', 'True', 'None — print does not return a value', 'An error occurs'], c: 2, r: 'When a function uses print without return, calling it returns None automatically. Assigning it to result gives you result = None, not the printed value. This is one of the most common beginner mistakes.' },
+  { q: 'Which keyword sends a value back so it can be stored with result = f()?', opts: ['print', 'show', 'return', 'output'], c: 2, r: 'return sends the value out of the function back to where it was called. This allows result = f() to capture the value. print only displays — it does not send anything back.' },
+  { q: 'def add(a,b): return a+b — After result = add(3,5), what is in result?', opts: ['Nothing', '35', '8', 'print'], c: 2, r: 'return a+b sends back the computed value 3+5 which is 8. The assignment result = add(3,5) captures that returned value, so result now holds 8. No output appears yet — print(result) would display it.' }
+];
+(function buildPRQs() {
+  let html = '', answered = {};
+  prQs.forEach((q, i) => {
+    html += `<div style="${i>0?'margin-top:16px;padding-top:14px;border-top:1px solid var(--bdr)':''}" id="prq-${i}">
+      <p style="font-size:13px;font-weight:600;margin-bottom:10px">${i+1}. ${q.q}</p>
+      ${q.opts.map((o,j)=>`<button class="qo" onclick="prAns(${i},${j})">${String.fromCharCode(65+j)}. ${o}</button>`).join('')}
+      <div class="feedback" id="prfb-${i}"></div>
+    </div>`;
+  });
+  document.getElementById('printReturnQs').innerHTML = html;
+  window.prAns = function(qi, ci) {
+    if (answered[qi]) return;
+    answered[qi] = true;
+    const q = prQs[qi];
+    const btns = document.getElementById('prq-' + qi).querySelectorAll('.qo');
+    btns.forEach(b => b.setAttribute('disabled', true));
+    btns[ci].classList.add(ci === q.c ? 'correct' : 'wrong');
+    if (ci !== q.c) btns[q.c].classList.add('correct');
+    const fb = document.getElementById('prfb-' + qi);
+    fb.className = 'feedback show ' + (ci === q.c ? 'fb-c' : 'fb-w');
+    fb.innerHTML = (ci === q.c ? '✅ ' : '❌ ') + q.r;
+    if (ci === q.c) addScore(8, 4);
+  };
+})();
+
+// ════════════════════════════════════════════════
+// SECTION 5 — Parameters + Matching
+// ════════════════════════════════════════════════
+const matchTerms = [
+  { term: 'Parameter', def: 'A variable in the function definition that acts as a placeholder for an input', key: 'p1' },
+  { term: 'Argument', def: 'The actual value passed into the function when it is called', key: 'p2' },
+  { term: 'Function call', def: 'The line of code that runs the stored function instructions', key: 'p3' },
+  { term: 'return value', def: 'The value sent back from the function to where it was called', key: 'p4' },
+  { term: 'Function name', def: 'The identifier written after def that labels the stored instructions', key: 'p5' }
+];
+let matchSelected = null, matchDone = {};
+(function buildMatching() {
+  const shuffledDefs = [...matchTerms].sort(() => Math.random() - .5);
+  let html = matchTerms.map((m, i) => `
+    <div class="matching-pair" id="mp-${i}">
+      <div class="match-left" onclick="selectLeft(${i},'${m.key}')" id="ml-${i}">${m.term}</div>
+      <div style="color:var(--muted);font-size:18px">⇄</div>
+      <div class="match-right" onclick="selectRight('${shuffledDefs[i].key}',${i})" id="mr-${i}" data-key="${shuffledDefs[i].key}">${shuffledDefs[i].def}</div>
+    </div>`).join('');
+  document.getElementById('matchingActivity').innerHTML = html;
+})();
+
+function selectLeft(idx, key) {
+  if (matchDone[idx]) return;
+  document.querySelectorAll('.match-left').forEach(e => e.classList.remove('selected'));
+  document.getElementById('ml-' + idx).classList.add('selected');
+  matchSelected = { idx, key };
+}
+function selectRight(defKey, defIdx) {
+  if (!matchSelected) return;
+  const { idx, key } = matchSelected;
+  if (matchDone[idx]) return;
+  matchDone[idx] = true;
+  matchSelected = null;
+  const correct = key === defKey;
+  const pair = document.getElementById('mp-' + idx);
+  pair.querySelectorAll('.match-left,.match-right').forEach(e => {
+    e.style.borderColor = correct ? 'var(--green)' : 'var(--red)';
+    e.style.background = correct ? 'var(--green-bg)' : 'var(--red-bg)';
+    e.style.color = correct ? 'var(--green)' : 'var(--red)';
+  });
+  if (correct) addScore(5, 5);
+  const allDone = matchTerms.every((_, i) => matchDone[i]);
+  if (allDone) {
+    const fb = document.getElementById('matchFeedback');
+    fb.className = 'feedback show fb-info';
+    fb.innerHTML = '🎯 Matching complete! Review any mismatches above. These terms are foundational to reading and writing Python functions.';
+  }
+}
+
+const paramQs = [
+  { q: 'In def greet(name):, what is name?', opts: ['The function call', 'A string value', 'A parameter — a placeholder for the value passed in', 'A built-in Python keyword'], c: 2, r: 'name is a parameter — a variable listed in the definition that will receive the actual value when the function is called.' },
+  { q: 'When greet("Alice") is called, what is "Alice"?', opts: ['A parameter', 'An argument — the actual value passed to the parameter name', 'A return value', 'A variable named Alice'], c: 1, r: '"Alice" is an argument — the real value passed into the function. It gets assigned to the parameter name inside the function.' },
+  { q: 'In def add(a, b): — when add(10, 3) is called, what is a?', opts: ['3', '10 — matched by position', '13', 'a remains undefined'], c: 1, r: 'Arguments are matched to parameters by position. The first argument (10) goes to the first parameter (a), so a is 10. The second argument (3) goes to b.' }
+];
+(function buildParamQs() {
+  let html = '', answered = {};
+  paramQs.forEach((q, i) => {
+    html += `<div style="${i>0?'margin-top:14px;padding-top:12px;border-top:1px solid var(--bdr)':''}" id="paq-${i}">
+      <p style="font-size:13px;font-weight:600;margin-bottom:10px">${i+1}. ${q.q}</p>
+      ${q.opts.map((o,j)=>`<button class="qo" onclick="paAns(${i},${j})">${String.fromCharCode(65+j)}. ${o}</button>`).join('')}
+      <div class="feedback" id="pafb-${i}"></div>
+    </div>`;
+  });
+  document.getElementById('paramQs').innerHTML = html;
+  window.paAns = function(qi, ci) {
+    if (answered[qi]) return;
+    answered[qi] = true;
+    const q = paramQs[qi];
+    const btns = document.getElementById('paq-' + qi).querySelectorAll('.qo');
+    btns.forEach(b => b.setAttribute('disabled', true));
+    btns[ci].classList.add(ci === q.c ? 'correct' : 'wrong');
+    if (ci !== q.c) btns[q.c].classList.add('correct');
+    const fb = document.getElementById('pafb-' + qi);
+    fb.className = 'feedback show ' + (ci === q.c ? 'fb-c' : 'fb-w');
+    fb.innerHTML = (ci === q.c ? '✅ ' : '❌ ') + q.r;
+    if (ci === q.c) addScore(5, 5);
+  };
+})();
+
+// ════════════════════════════════════════════════
+// SECTION 6 — Misconceptions
+// ════════════════════════════════════════════════
+const miscData = [
+  { q: '"If I define a function, doesn\'t it already run?"', a: 'No. Defining a function only stores the instructions in memory. Python reads them but does not execute them. Nothing happens — no output, no action — until you call the function by name with parentheses.' },
+  { q: '"If I return 8, why don\'t I see 8 on the screen?"', a: 'return sends the value back to the calling code — it does not display anything. To see 8, you must explicitly print it: <span class="code-inline">print(add(3,5))</span> or <span class="code-inline">result = add(3,5)</span> then <span class="code-inline">print(result)</span>.' },
+  { q: '"Is result part of Python?"', a: 'No. result is a variable name you chose. You could name it anything: answer, total, x, my_value. It is just a storage container you create with the assignment operator =. Python does not know about result until you write it.' },
+  { q: '"Can I use any name after def?"', a: 'Almost. The name must follow Python identifier rules: start with a letter or underscore, no spaces, no special characters, and it cannot be a Python keyword (like def, return, print, if). Good names describe what the function does.' },
+  { q: '"Is add already built into Python?"', a: 'No. add is a function name you defined. Python has its own built-in functions like print, len, type, and range — but add is yours. You created it with <span class="code-inline">def add(a, b):</span>. Before that line, Python has no idea what add is.' },
+  { q: '"What is the difference between add and print?"', a: '<span class="code-inline">print</span> is a built-in Python function that already exists. <span class="code-inline">add</span> is a function you defined yourself. Both are functions and both are called the same way with <span class="code-inline">()</span>. The difference is origin: built-in vs user-defined.' },
+  { q: '"What does the colon actually do?"', a: 'The colon ends the function header line and tells Python that an indented block (the function body) is about to start on the next line. Without the colon, Python raises a SyntaxError immediately. The colon is not optional.' },
+  { q: '"What happens if I forget parentheses when calling a function?"', a: 'Without parentheses, you are not calling the function — you are referencing it as a value. Writing <span class="code-inline">greet</span> instead of <span class="code-inline">greet()</span> does not run it. Python gives you a reference to the function object, not the output.' },
+  { q: '"What happens if I define a function and never call it?"', a: 'Nothing runs. The function exists in memory but its instructions are never executed. No output, no computation, no error. It just sits there, unused. Every function must be called explicitly for it to do anything.' }
+];
+(function buildMisc() {
+  let html = '';
+  miscData.forEach((m, i) => {
+    html += `<div class="misc-card">
+      <div class="misc-q" onclick="toggleMisc(this)">
+        <span>❓ ${m.q}</span><span class="arr">▶</span>
+      </div>
+      <div class="misc-a"><div style="padding-top:14px">${m.a}</div></div>
+    </div>`;
+  });
+  document.getElementById('misconceptions').innerHTML = html;
+  addScore(5, 6); // auto-credit for reading
+})();
+function toggleMisc(el) {
+  const ans = el.nextElementSibling;
+  const isOpen = ans.classList.contains('visible');
+  el.classList.toggle('open', !isOpen);
+  ans.classList.toggle('visible', !isOpen);
+}
+
+// ════════════════════════════════════════════════
+// SECTION 7 — Build the Meaning
+// ════════════════════════════════════════════════
+const correctOrder = [
+  { id: 'o1', text: 'def — keyword to start a function definition' },
+  { id: 'o2', text: 'function name — identifier written after def' },
+  { id: 'o3', text: '() — parentheses listing parameters (or empty)' },
+  { id: 'o4', text: ': — colon ending the header line' },
+  { id: 'o5', text: 'indented body — the instructions that run when called' }
+];
+(function buildOrder() {
+  const shuffled = [...correctOrder].sort(() => Math.random() - .5);
+  let html = '';
+  shuffled.forEach(item => {
+    html += `<li class="order-item" draggable="true" data-id="${item.id}">
+      <span class="order-handle">⠿</span>
+      <span class="order-label">${item.text}</span>
+    </li>`;
+  });
+  const ol = document.getElementById('orderList');
+  ol.innerHTML = html;
+  let dragSrc = null;
+  ol.addEventListener('dragstart', e => { dragSrc = e.target.closest('.order-item'); e.dataTransfer.effectAllowed = 'move'; });
+  ol.addEventListener('dragover', e => { e.preventDefault(); const t = e.target.closest('.order-item'); if (t && t !== dragSrc) { const rect = t.getBoundingClientRect(); if (e.clientY < rect.top + rect.height / 2) ol.insertBefore(dragSrc, t); else ol.insertBefore(dragSrc, t.nextSibling); } });
+  ol.addEventListener('dragend', () => dragSrc = null);
+})();
+
+function checkOrder() {
+  const items = document.querySelectorAll('.order-item');
+  const ids = Array.from(items).map(i => i.dataset.id);
+  const correct = correctOrder.map(i => i.id);
+  let allCorrect = true;
+  items.forEach((item, i) => {
+    if (ids[i] === correct[i]) { item.classList.add('order-correct'); item.classList.remove('order-wrong'); }
+    else { item.classList.add('order-wrong'); item.classList.remove('order-correct'); allCorrect = false; }
+  });
+  const fb = document.getElementById('orderFeedback');
+  fb.className = 'feedback show ' + (allCorrect ? 'fb-c' : 'fb-w');
+  fb.innerHTML = allCorrect ? '✅ Perfect order! def → name → () → : → indented body' : '❌ Not quite. Reorder and try again. The sequence is: def keyword → function name → parentheses → colon → indented instructions.';
+  if (allCorrect) addScore(15, 7);
+}
+
+// Sort activity
+const sortItemsData = [
+  { text: 'print("Hello")', bin: 'display', label: 'print shows text on screen' },
+  { text: 'result = add(3,5)', bin: 'stored', label: 'returned value stored in result' },
+  { text: 'greet()', bin: 'calls', label: 'calling the greet function' },
+  { text: 'def add(a,b):', bin: 'defines', label: 'defining function named add' },
+  { text: 'print(result)', bin: 'display', label: 'displays what is in result' },
+  { text: 'def greet():', bin: 'defines', label: 'defining function named greet' },
+  { text: 'add(2,8)', bin: 'calls', label: 'calling add' },
+  { text: 'x = add(1,2)', bin: 'stored', label: 'returned value stored in x' }
+];
+let sortSelected = null, sortPlaced = {};
+(function buildSort() {
+  const pool = document.getElementById('sortItems');
+  sortItemsData.forEach((item, i) => {
+    const el = document.createElement('div');
+    el.className = 'sort-card';
+    el.textContent = item.text;
+    el.dataset.idx = i;
+    el.onclick = () => { if (sortPlaced[i]) return; document.querySelectorAll('.sort-card').forEach(c => c.style.outline = ''); el.style.outline = '2px solid var(--blue)'; sortSelected = i; };
+    pool.appendChild(el);
+  });
+  ['display','stored','calls','defines'].forEach(bin => {
+    document.getElementById('bin-' + bin).onclick = () => {
+      if (sortSelected === null) return;
+      const idx = sortSelected; sortSelected = null;
+      document.querySelectorAll('.sort-card').forEach(c => c.style.outline = '');
+    };
+  });
+})();
+
+function checkSort() {
+  let correct = 0, total = sortItemsData.length;
+  document.querySelectorAll('.sort-card').forEach(card => {
+    const idx = parseInt(card.dataset.idx);
+    const item = sortItemsData[idx];
+    const parent = card.parentElement;
+    if (!parent || !parent.id) return;
+    const parentBin = parent.id.replace('bin-', '');
+    if (parentBin === item.bin) { card.className = 'sort-card sc-correct'; correct++; }
+    else { card.className = 'sort-card sc-wrong'; }
+    sortPlaced[idx] = true;
+  });
+  const fb = document.getElementById('sortFeedback');
+  fb.className = 'feedback show ' + (correct === total ? 'fb-c' : 'fb-w');
+  fb.innerHTML = `${correct === total ? '✅' : '❌'} ${correct}/${total} sorted correctly. <br>Displays = print calls | Stored = assignment with return | Calls = function names with () | Defines = lines starting with def`;
+  if (correct > 0) addScore(correct * 4, 7);
+}
+
+// ════════════════════════════════════════════════
+// SECTION 8 — Competency Checks
+// ════════════════════════════════════════════════
+const rounds = [
+  { // Round A: Recognition
+    title: 'Round A — Recognition',
+    qs: [
+      { q: 'Which line defines a function?', opts: ['greet()', 'x = 5', 'def greet():', 'print(greet)'], c: 2, r: 'def greet(): is a function definition. The keyword def starts it and the colon ends the header.' },
+      { q: 'Which line calls a function?', opts: ['def multiply(a,b):', 'return a*b', '    print("hi")', 'multiply(4,3)'], c: 3, r: 'multiply(4,3) calls the function. A call uses the function name followed by parentheses containing arguments.' },
+      { q: 'Which is a parameter?', opts: ['add(3,5)', 'def add(a,b):', 'a — in the definition def add(a,b):', 'result = add(3,5)'], c: 2, r: 'In the definition def add(a,b):, both a and b are parameters — placeholders for the values to be passed in when called.' }
+    ]
+  },
+  { // Round B: Explanation
+    title: 'Round B — Explanation',
+    qs: [
+      { q: 'What is the most accurate explanation of what def does?', opts: ['It runs the function immediately', 'It tells Python to define and store a function — not to run it', 'It defines a variable', 'It prints the function name'], c: 1, r: 'def tells Python to create a function definition and store the instructions under the given name. Nothing executes at this point.' },
+      { q: 'What is the most accurate explanation of return?', opts: ['It displays the value on the screen', 'It ends the program', 'It sends a value back from the function to wherever the function was called', 'It stores a value inside the function permanently'], c: 2, r: 'return sends a value out of the function back to the calling code. That value can then be captured with assignment or used in an expression.' },
+      { q: 'Why must the function body be indented?', opts: ['To make the code look clean', 'For speed optimization', 'Because Python uses indentation structurally to determine which lines belong inside the function', 'To prevent the function from running automatically'], c: 2, r: 'Python has no curly braces. It uses indentation to define code blocks. All lines indented under the def header belong to the function. Wrong indentation causes structural errors.' }
+    ]
+  },
+  { // Round C: Debugging
+    title: 'Round C — Debugging',
+    qs: [
+      { q: 'def greet()\n    print("Hi")\n— What is wrong?', opts: ['print is spelled wrong', 'The indentation is wrong', 'Missing colon after the parentheses in the function header', 'greet is not a valid name'], c: 2, r: 'The colon is missing: def greet(): is required. Without it Python raises SyntaxError: expected \':\' .' },
+      { q: 'def add(a, b):\nreturn a + b\n— What is wrong?', opts: ['return should be print', 'The function has two parameters', 'The return line is not indented — it must be indented inside the function body', 'add is already a built-in'], c: 2, r: 'The return statement must be indented to be inside the function. An unindented return is a SyntaxError.' },
+      { q: 'result = show()\nprint(result) outputs None — Why?', opts: ['print is wrong', 'result is a reserved word', 'show probably uses print internally instead of return, so it returns None', 'The function was never defined'], c: 2, r: 'If show uses print instead of return, calling it gives back None automatically. To store a value from a function, the function must explicitly use return.' }
+    ]
+  },
+  { // Round D: Prediction
+    title: 'Round D — Prediction',
+    qs: [
+      { q: 'def double(n):\n    return n * 2\nresult = double(4)\nprint(result)\n— What is output?', opts: ['4', '2', '42', '8'], c: 3, r: 'double(4) returns 4*2 = 8. result stores 8. print(result) displays 8.' },
+      { q: 'def say():\n    print("Go!")\nresult = say()\nprint(result)\n— What outputs?', opts: ['Go! then Go!', 'Go! then None', 'None then Go!', 'Nothing — no output'], c: 1, r: 'Calling say() executes print("Go!") and displays Go!. But say returns None because there is no return statement. So result is None and print(result) displays None.' },
+      { q: 'def add(a,b):\n    return a+b\nprint(add(2,3))\n— What outputs?', opts: ['None', '23', '5', 'Error'], c: 2, r: 'add(2,3) returns 5. print() takes that returned 5 and displays it. This is a valid shortcut — you do not need a result variable to use a return value.' }
+    ]
+  },
+  { // Round E: Application
+    title: 'Round E — Application',
+    qs: [
+      { q: 'You want a function that calculates the area of a rectangle and stores it for later calculation. Should it use print or return?', opts: ['print — to show the area immediately', 'return — so the value can be stored and used in further calculations', 'Both — always use both', 'Neither — Python calculates automatically'], c: 1, r: 'return sends back the calculated area so it can be stored (e.g. result = area(5, 3)) and used in further expressions. print only displays — the value cannot be reused.' },
+      { q: 'You want greet to say different things to different people. What does the function need?', opts: ['No changes — it already works', 'A parameter for the name, so each caller can pass a different name in', 'Multiple function definitions, one per person', 'A return value instead of print'], c: 1, r: 'Adding a parameter allows the same function to produce different output based on input: def greet(name): print("Hello", name). Each call passes a different name.' },
+      { q: 'result = calculate() outputs None. What is most likely wrong?', opts: ['calculate is spelled wrong', 'print is missing from the output', 'calculate probably uses print instead of return — so the result is None not the computed value', 'Variables cannot store function results'], c: 2, r: 'If calculate uses only print, it returns None. To store a computed value, the function must use return. This is the most common source of this confusion.' }
+    ]
+  }
+];
+
+(function buildRounds() {
+  rounds.forEach((round, ri) => {
+    let html = `<div class="card"><div class="card-title">${round.title}</div>`;
+    let answered = {};
+    round.qs.forEach((q, qi) => {
+      const uid = `r${ri}q${qi}`;
+      html += `<div style="${qi>0?'margin-top:16px;padding-top:14px;border-top:1px solid var(--bdr)':''}" id="${uid}">
+        <p style="font-size:13px;font-weight:600;margin-bottom:10px;white-space:pre-line">${qi+1}. ${q.q}</p>
+        ${q.opts.map((o,j)=>`<button class="qo" onclick="roundAns(${ri},${qi},'${uid}',${j})">${String.fromCharCode(65+j)}. ${o}</button>`).join('')}
+        <div class="feedback" id="${uid}fb"></div>
+      </div>`;
+    });
+    html += '</div>';
+    document.getElementById('round' + String.fromCharCode(65 + ri)).innerHTML = html;
+  });
+  window.roundAns = function(ri, qi, uid, ci) {
+    const answered = window._roundAnswered || (window._roundAnswered = {});
+    if (answered[uid]) return;
+    answered[uid] = true;
+    const q = rounds[ri].qs[qi];
+    const btns = document.getElementById(uid).querySelectorAll('.qo');
+    btns.forEach(b => b.setAttribute('disabled', true));
+    btns[ci].classList.add(ci === q.c ? 'correct' : 'wrong');
+    if (ci !== q.c) btns[q.c].classList.add('correct');
+    const fb = document.getElementById(uid + 'fb');
+    fb.className = 'feedback show ' + (ci === q.c ? 'fb-c' : 'fb-w');
+    fb.innerHTML = (ci === q.c ? '✅ ' : '❌ ') + q.r;
+    if (ci === q.c) addScore(8, 8);
+  };
+})();
+
+function showRound(ri) {
+  document.querySelectorAll('.round-content').forEach((el, i) => {
+    el.style.display = i === ri ? 'block' : 'none';
+  });
+  const rbs = ['rb0','rb1','rb2','rb3','rb4'];
+  rbs.forEach((id, i) => {
+    document.getElementById(id).className = 'btn btn-sm ' + (i === ri ? 'btn-bl' : 'btn-ghost');
+  });
+}
+
+// ════════════════════════════════════════════════
+// SECTION 9 — Error Detective
+// ════════════════════════════════════════════════
+const errorCases = [
+  {
+    title: 'Case 1',
+    lines: [
+      { text: 'def greet(name)', error: true, errMsg: 'Missing colon', explain: 'def greet(name) is missing the colon at the end. It must be def greet(name): — the colon is required to open the function body block.' },
+      { text: '    print("Hello", name)', error: false }
+    ]
+  },
+  {
+    title: 'Case 2',
+    lines: [
+      { text: 'def add(a, b):', error: false },
+      { text: 'return a + b', error: true, errMsg: 'Missing indentation', explain: 'The return statement is not indented. Python sees it as outside the function. All function body lines must be indented (4 spaces).' }
+    ]
+  },
+  {
+    title: 'Case 3',
+    lines: [
+      { text: 'def multiply(a, b):', error: false },
+      { text: '    print(a * b)', error: true, errMsg: 'print instead of return', explain: 'This function uses print instead of return. Calling result = multiply(3, 4) would give result = None, not 12. Use return if you need to store the value.' }
+    ]
+  },
+  {
+    title: 'Case 4',
+    lines: [
+      { text: 'def greet():', error: false },
+      { text: '    print("Hello")', error: false },
+      { text: '', error: false },
+      { text: 'greet', error: true, errMsg: 'Missing parentheses in call', explain: 'Writing greet without () is not a function call — it is a reference to the function object. No instructions run. The correct call is greet().' }
+    ]
+  }
+];
+(function buildErrors() {
+  let html = '';
+  errorCases.forEach((c, ci) => {
+    html += `<div class="err-card" id="err-${ci}">
+      <div class="err-header">🔍 ${c.title} — Click the line with the error</div>
+      <div class="err-code">`;
+    c.lines.forEach((line, li) => {
+      if (line.error) {
+        html += `<span class="err-line has-error" onclick="spotError(${ci},${li})" id="errl-${ci}-${li}"><span class="kw" style="opacity:.4">→</span> ${line.text || '&nbsp;'}</span>`;
+      } else {
+        html += `<span class="err-line">&nbsp; ${line.text || '&nbsp;'}</span>`;
+      }
+    });
+    html += `</div>
+      <div class="err-found" id="errf-${ci}"></div>
+      <div class="err-explain" id="erre-${ci}"></div>
+    </div>`;
+  });
+  document.getElementById('errorCases').innerHTML = html;
+})();
+const errSpotted = {};
+function spotError(ci, li) {
+  if (errSpotted[ci]) return;
+  errSpotted[ci] = true;
+  const c = errorCases[ci];
+  const line = c.lines[li];
+  document.getElementById('errl-' + ci + '-' + li).style.background = 'rgba(248,81,73,.25)';
+  const f = document.getElementById('errf-' + ci);
+  f.className = 'err-found visible';
+  f.innerHTML = '🎯 Error found: <strong>' + line.errMsg + '</strong>';
+  const e = document.getElementById('erre-' + ci);
+  e.className = 'err-explain visible';
+  e.innerHTML = '✅ ' + line.explain;
+  addScore(10, 9);
+}
+
+// ════════════════════════════════════════════════
+// SECTION 10 — Higher Order
+// ════════════════════════════════════════════════
+const hoData = [
+  {
+    scenario: 'You need a greeting system that prints a personalized welcome message to each user. The message does not need to be stored.',
+    qs: [
+      { q: 'Does this function need a parameter?', opts: ['No — always prints the same thing', 'Yes — a name parameter so it can greet different users'], c: 1, r: 'Yes — a parameter allows the same function to greet different people: def greet(name): print("Welcome,", name)' },
+      { q: 'Should it use print or return?', opts: ['print — the message is displayed directly, no storage needed', 'return — to send the message back'], c: 0, r: 'print is correct here. The message does not need to be stored or reused — it just needs to display immediately.' }
+    ]
+  },
+  {
+    scenario: 'An area calculator computes the area of a rectangle. The result will be used in further calculations like total surface area.',
+    qs: [
+      { q: 'How many parameters does this function need?', opts: ['None', 'One (width)', 'Two (width and height)', 'Four (all sides)'], c: 2, r: 'Width and height are both needed to compute area. def area(width, height): return width * height' },
+      { q: 'Should it use print or return?', opts: ['print — show the result immediately', 'return — the value needs to be stored for further calculations'], c: 1, r: 'return is essential here. Since the result is used in further calculations, it must be returned so it can be captured: total = area(5,3) + area(4,2)' }
+    ]
+  },
+  {
+    scenario: 'A score checker decides whether a student passed (score >= 60). The result will be displayed as "Pass" or "Fail".',
+    qs: [
+      { q: 'What should this function receive as input?', opts: ['Nothing', 'The student\'s name only', 'The student\'s score — to compare against 60', 'Both score and student name'], c: 2, r: 'The function needs the score to make the comparison: def check_pass(score): return score >= 60' },
+      { q: 'Should it print the result or return True/False?', opts: ['print "Pass" or "Fail" directly', 'return True or False so the caller decides what to display', 'Both — always use both'], c: 1, r: 'Returning True or False makes the function more flexible and reusable. The caller can then decide: if check_pass(score): print("Pass") else: print("Fail")' }
+    ]
+  }
+];
+(function buildHO() {
+  let html = '', answered = {};
+  hoData.forEach((item, ii) => {
+    html += `<div class="card" style="${ii>0?'margin-top:14px':''}">
+      <div class="card-title">Scenario ${ii+1}</div>
+      <div class="note" style="margin-bottom:14px">${item.scenario}</div>`;
+    item.qs.forEach((q, qi) => {
+      const uid = `ho${ii}q${qi}`;
+      html += `<div style="${qi>0?'margin-top:12px;padding-top:12px;border-top:1px solid var(--bdr)':''}">
+        <p style="font-size:13px;font-weight:600;margin-bottom:10px">${q.q}</p>
+        <div id="${uid}">
+          ${q.opts.map((o,j)=>`<button class="qo" onclick="hoAns('${uid}',${j},${q.c},'${q.r.replace(/'/g,"\\'")}',10)">${String.fromCharCode(65+j)}. ${o}</button>`).join('')}
+          <div class="feedback" id="${uid}fb"></div>
+        </div>
+      </div>`;
+    });
+    html += '</div>';
+  });
+  document.getElementById('higherOrder').innerHTML = html;
+  window.hoAns = function(uid, ci, correct, rationale, sec) {
+    if (answered[uid]) return;
+    answered[uid] = true;
+    const btns = document.getElementById(uid).querySelectorAll('.qo');
+    btns.forEach(b => b.setAttribute('disabled', true));
+    btns[ci].classList.add(ci === correct ? 'correct' : 'wrong');
+    if (ci !== correct) btns[correct].classList.add('correct');
+    const fb = document.getElementById(uid + 'fb');
+    fb.className = 'feedback show ' + (ci === correct ? 'fb-c' : 'fb-w');
+    fb.innerHTML = (ci === correct ? '✅ ' : '❌ ') + rationale;
+    if (ci === correct) addScore(8, sec);
+  };
+})();
+
+// ════════════════════════════════════════════════
+// SECTION 11 — Mastery Challenge
+// ════════════════════════════════════════════════
+const masteryQs = [
+  { type: 'mc', q: 'Which of the following is a complete, valid function definition?', opts: ['greet()', 'def greet:\n    print("Hi")', 'def greet():\n    print("Hi")', 'function greet():\n    print("Hi")'], c: 2, r: 'def greet(): print("Hi") — has all required parts: def keyword, name, empty parentheses, colon, and indented body.' },
+  { type: 'mc', q: 'What is the output?\ndef square(n):\n    return n * n\nresult = square(4)\nprint(result)', opts: ['n * n', 'square(4)', 'None', '16'], c: 3, r: 'square(4) computes 4*4=16 and returns it. result stores 16. print(result) displays 16.' },
+  { type: 'mc', q: 'What does result store after: result = greet() — where greet uses print but not return?', opts: ['"Hello"', 'True', 'None', 'An error'], c: 2, r: 'A function without return gives back None. So result = None, not the printed string. This is the print-vs-return trap.' },
+  { type: 'mc', q: 'In def add(x, y): — when add(10, 5) is called, what is x?', opts: ['5', '10 — first argument goes to first parameter', '15', 'x remains empty'], c: 1, r: 'Arguments are matched to parameters by position. First argument (10) → first parameter (x). Second argument (5) → y.' },
+  { type: 'mc', q: 'Why must the body of a function be indented?', opts: ['For visual appearance only', 'Python requires it — indentation defines what lines belong inside the function', 'To make Python run faster', 'To prevent the function from calling itself'], c: 1, r: 'Python uses indentation as its block-defining mechanism. Every line indented under the def header is inside the function. Without it, Python cannot determine the function\'s structure.' },
+  { type: 'mc', q: 'What is the purpose of the colon after def greet()?', opts: ['It ends the function definition completely', 'It signals that the indented function body starts on the next line', 'It is optional formatting', 'It tells Python to run the function'], c: 1, r: 'The colon is required. It ends the function header and tells Python that an indented code block starts on the next line.' },
+  { type: 'mc', q: 'When does a function\'s code actually execute?', opts: ['When Python reads the def line', 'When the file is saved', 'Only when the function is called with its name and parentheses', 'As soon as the colon is written'], c: 2, r: 'Defining a function stores it. The code only executes when the function is called: greet() or add(3,5). Without a call, nothing runs.' },
+  { type: 'mc', q: 'print(add(3, 2)) — What does this line do?', opts: ['Calls add, stores the result, then prints it', 'Calls add which returns 5, then print displays that 5 directly', 'Defines add', 'Prints the word add'], c: 1, r: 'add(3,2) is called first, returning 5. That returned value is passed directly to print, which displays 5. No storage variable is needed.' },
+  { type: 'mc', q: 'Which best describes a parameter?', opts: ['The value you pass when calling the function', 'A built-in Python value', 'A placeholder variable in the function definition that receives the argument', 'The output of the function'], c: 2, r: 'A parameter is a placeholder variable in the definition. The argument is the actual value passed in. Parameter lives in the definition; argument lives in the call.' },
+  { type: 'mc', q: 'A student writes def 2calc(): — What is wrong?', opts: ['calc is a reserved word', 'Function names cannot start with a number — 2calc is an invalid identifier', 'def needs a colon here', 'Nothing is wrong'], c: 1, r: 'Python identifiers (including function names) cannot start with a digit. 2calc would cause a SyntaxError. Valid names start with a letter or underscore: calc2, two_calc, _calc.' }
+];
+let masteryAnswered = {}, masteryScore = 0;
+(function buildMastery() {
+  let html = '';
+  masteryQs.forEach((q, i) => {
+    html += `<div class="challenge-q" id="cq-${i}">
+      <span class="cq-num">${i+1}</span>
+      <div class="cq-text">${q.q}</div>
+      ${q.opts.map((o,j)=>`<button class="qo" onclick="masteryAns(${i},${j})">${String.fromCharCode(65+j)}. ${o}</button>`).join('')}
+      <div class="feedback" id="cqfb-${i}"></div>
+    </div>`;
+  });
+  html += `<div style="margin-top:20px;text-align:center"><button class="btn-nav" onclick="showMasteryResult()">See Results →</button></div>`;
+  document.getElementById('masteryChallenge').innerHTML = html;
+})();
+function masteryAns(qi, ci) {
+  if (masteryAnswered[qi]) return;
+  masteryAnswered[qi] = true;
+  const q = masteryQs[qi];
+  const btns = document.getElementById('cq-' + qi).querySelectorAll('.qo');
+  btns.forEach(b => b.setAttribute('disabled', true));
+  btns[ci].classList.add(ci === q.c ? 'correct' : 'wrong');
+  if (ci !== q.c) btns[q.c].classList.add('correct');
+  const fb = document.getElementById('cqfb-' + qi);
+  fb.className = 'feedback show ' + (ci === q.c ? 'fb-c' : 'fb-w');
+  fb.innerHTML = (ci === q.c ? '✅ ' : '❌ ') + q.r;
+  if (ci === q.c) { masteryScore++; addScore(10, 11); }
+}
+function showMasteryResult() {
+  document.getElementById('masteryResult').style.display = 'block';
+  const banner = document.getElementById('masteryBanner');
+  const pct = Math.round(masteryScore / masteryQs.length * 100);
+  const grade = pct >= 90 ? '🏆 Outstanding!' : pct >= 70 ? '⭐ Great Work!' : pct >= 50 ? '📚 Keep Reviewing!' : '🔁 Review and Retry';
+  banner.innerHTML = `${grade} You got ${masteryScore}/${masteryQs.length} correct (${pct}%).`;
+  banner.className = 'success-banner show';
+  window.scrollTo({ top: document.getElementById('masteryResult').offsetTop - 80, behavior: 'smooth' });
+}
+
+// ════════════════════════════════════════════════
+// SECTION 12 — Summary
+// ════════════════════════════════════════════════
+(function buildSummary() {
+  const grid = document.getElementById('summaryGrid');
+  grid.innerHTML = `
+    <div class="summary-card"><div class="summary-icon">⭐</div><div class="summary-title">Total Score</div><div class="summary-val" style="color:var(--yellow)" id="sumScore">0</div></div>
+    <div class="summary-card"><div class="summary-icon">🏆</div><div class="summary-title">Mastery Level</div><div class="summary-val" style="color:var(--green)" id="sumLevel">—</div></div>
+    <div class="summary-card"><div class="summary-icon">✅</div><div class="summary-title">Challenge Score</div><div class="summary-val" style="color:var(--blue)" id="sumChallenge">—</div></div>
+    <div class="summary-card"><div class="summary-icon">🎓</div><div class="summary-title">Sections Completed</div><div class="summary-val" style="color:var(--violet)" id="sumSecs">12</div></div>
+  `;
+  const concepts = [
+    { label: 'def and function definition', key: 'define' },
+    { label: 'Calling a function', key: 'call' },
+    { label: 'print vs return', key: 'printvret' },
+    { label: 'Parameters and arguments', key: 'params' },
+    { label: 'Indentation and structure', key: 'indent' },
+    { label: 'Variable assignment from return', key: 'result' }
+  ];
+  let barsHtml = '';
+  concepts.forEach(c => {
+    barsHtml += `<div class="mastery-bar-wrap">
+      <div class="mastery-bar-label"><span>${c.label}</span><span id="pct-${c.key}">—</span></div>
+      <div class="mastery-bar"><div class="mastery-bar-fill" id="bar-${c.key}" style="width:0%;background:linear-gradient(90deg,var(--blue-d),var(--green))"></div></div>
+    </div>`;
+  });
+  document.getElementById('masteryBars').innerHTML = barsHtml;
+
+  const takeaways = [
+    { icon: '🔵', code: 'def', text: '<span class="kt-code">def</span> introduces a new function definition. Python stores the instructions — nothing runs yet.' },
+    { icon: '🟢', code: 'call', text: 'Calling the function — writing <span class="kt-code">greet()</span> — is what actually runs the stored instructions.' },
+    { icon: '🟣', code: 'print', text: '<span class="kt-code">print()</span> displays a value on screen. The value cannot be stored or reused after printing.' },
+    { icon: '🔴', code: 'return', text: '<span class="kt-code">return</span> sends a value back from the function. The calling code can capture it with assignment.' },
+    { icon: '🟡', code: 'result', text: '<span class="kt-code">result = add(3,5)</span> stores the returned value 8 in the variable result. <span class="kt-code">print(result)</span> then displays it.' },
+    { icon: '⚪', code: 'params', text: 'Parameters are placeholders in the definition. Arguments are the actual values passed in the call. They match by position.' }
+  ];
+  let ktHtml = '';
+  takeaways.forEach(t => { ktHtml += `<div class="key-takeaway"><div class="kt-icon">${t.icon}</div><div class="kt-text">${t.text}</div></div>`; });
+  document.getElementById('keyTakeaways').innerHTML = ktHtml;
+})();
+
+function fillSummary() {
+  document.getElementById('sumScore').textContent = score;
+  const pct = Math.min(100, Math.round(score / 5));
+  const level = pct >= 85 ? 'Expert 🏆' : pct >= 65 ? 'Advanced ⭐' : pct >= 45 ? 'Developing 📚' : 'Beginner 🌱';
+  document.getElementById('sumLevel').textContent = level;
+  document.getElementById('sumChallenge').textContent = masteryScore + '/' + masteryQs.length;
+  // Fill bars with simulated concept mastery based on section scores
+  const secs = sectionScores;
+  const fill = (key, pct) => {
+    const el = document.getElementById('bar-' + key);
+    const lbl = document.getElementById('pct-' + key);
+    const clamped = Math.min(100, Math.max(0, pct));
+    setTimeout(() => { if (el) el.style.width = clamped + '%'; if (lbl) lbl.textContent = clamped + '%'; }, 300);
+  };
+  fill('define', secs[2] ? Math.min(100, (secs[2] / 30) * 100) : 60);
+  fill('call', secs[3] ? Math.min(100, (secs[3] / 50) * 100) : 60);
+  fill('printvret', secs[4] ? Math.min(100, (secs[4] / 32) * 100) : 60);
+  fill('params', secs[5] ? Math.min(100, (secs[5] / 40) * 100) : 60);
+  fill('indent', secs[8] ? Math.min(100, (secs[8] / 40) * 100) : 60);
+  fill('result', secs[11] ? Math.min(100, (secs[11] / 100) * 100) : 60);
+}
+
+// Navigate to section and run setup
+const originalGoTo = goToSection;
+goToSection = function(n) {
+  originalGoTo(n);
+  if (n === 12) fillSummary();
+};
+
+function restartLesson() {
+  score = 0;
+  sectionScores = new Array(13).fill(0);
+  document.getElementById('scoreDisplay').textContent = '0';
+  goToSection(0);
+  // Reset all answered flags
+  window._roundAnswered = {};
+  Object.keys(window).forEach(k => { if (k.startsWith('s') && window[k] === true) window[k] = false; });
+  s1answered = false;
+  errSpotted['0'] = errSpotted['1'] = errSpotted['2'] = errSpotted['3'] = false;
+  Object.assign(dvcAnswered, {});
+  Object.assign(matchDone, {});
+  Object.assign(masteryAnswered, {});
+  masteryScore = 0;
+}
+
+function reviewMistakes() {
+  goToSection(8); // Go to competency checks for review
+}
+
+// localStorage progress save
+function saveProgress() {
+  try { localStorage.setItem('pyFunc_score', score); localStorage.setItem('pyFunc_sec', currentSection); } catch(e) {}
+}
+function loadProgress() {
+  try {
+    const s = localStorage.getItem('pyFunc_score');
+    const n = localStorage.getItem('pyFunc_sec');
+    if (s) { score = parseInt(s); document.getElementById('scoreDisplay').textContent = score; }
+  } catch(e) {}
+}
+loadProgress();
+setInterval(saveProgress, 5000);
+
+// Init
+updateProgress();
+buildNavDots();
+</script>
+</body>
+</html>
